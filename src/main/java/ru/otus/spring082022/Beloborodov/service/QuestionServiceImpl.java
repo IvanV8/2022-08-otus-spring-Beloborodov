@@ -3,6 +3,8 @@ package ru.otus.spring082022.Beloborodov.service;
 import ru.otus.spring082022.Beloborodov.domain.Question;
 import ru.otus.spring082022.Beloborodov.repositary.QuestionDAOImpl;
 
+import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class QuestionServiceImpl implements QuestionService {
@@ -13,10 +15,12 @@ public class QuestionServiceImpl implements QuestionService {
         this.questionDAO = questionDAO;
     }
 
-    public void ListAllQuestions() {
-        ArrayList<Question> questions = questionDAO.getAll();
+    public void listAllQuestions() {
+        ArrayList<Question> questions = (ArrayList) questionDAO.getAll();
+        SystemOutService console = new SystemOutServiceImpl(System.out);
+
         questions.forEach((q) -> {
-            System.out.println("Question: " + q.getQuestionText() + ", answer: " + q.getAnswerText());
+            console.Out("Question: " + q.getQuestionText() + ", answer: " + q.getAnswerText());
         });
     }
 }
