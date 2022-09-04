@@ -4,11 +4,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import ru.otus.spring082022.Beloborodov.domain.Question;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +18,31 @@ public class QuestionDAOImpl implements QuestionDAO {
         csvPath = filePath;
     }
 
+    private InputStream getFileFromResourceAsStream(String fileName) {
+
+        // The class loader that loaded the class
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+
+        // the stream holding the file content
+        if (inputStream == null) {
+            throw new IllegalArgumentException("file not found! " + fileName);
+        } else {
+            return inputStream;
+        }
+
+    }
 
     @Override
-    public List<Question> getAll() {
+    public List<Question> getAll() throws FileNotFoundException, IOException {
         List<Question> questions = new ArrayList<>();
-        try (Reader reader = Files.newBufferedReader(Paths.get(csvPath))) {
+
+
+        InputStream is = getFileFromResourceAsStream(csvPath);
+
+        try (InputStreamReader streamReader =
+                     new InputStreamReader(is, StandardCharsets.UTF_8);
+             BufferedReader reader = new BufferedReader(streamReader)) {
 
             // read csv file
             Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(reader);
@@ -34,18 +51,11 @@ public class QuestionDAOImpl implements QuestionDAO {
                 questions.add(q);
             }
 
-
         } catch (FileNotFoundException ex) {
-            System.out.println(ex.toString());
-            System.out.println("Could not find  file " + csvPath);
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-            System.out.println("Could not read from  file " + csvPath);
+            throw new FileNotFoundException("file not found! " + csvPath);
         } catch (IllegalArgumentException ex) {
-            System.out.println(ex.toString());
-            System.out.println("Could not parse fields from line");
+            throw new IllegalArgumentException("Could not parse fields from line");
         }
-
         return questions;
     }
 
