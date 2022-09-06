@@ -14,6 +14,7 @@ public class BeloborodovApplication {
 				new ClassPathXmlApplicationContext("spring-context.xml");
 		QuestionService service = context.getBean(QuestionService.class);
 		service.listAllQuestions();
+
 	}
 
 }
