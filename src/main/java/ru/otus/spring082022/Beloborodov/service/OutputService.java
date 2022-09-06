@@ -5,9 +5,7 @@ import java.io.PrintStream;
 
 public interface OutputService {
 
+
     void out(String textMessage);
-
-    void setOutputStream(OutputStream outputStream);
-
 
 }

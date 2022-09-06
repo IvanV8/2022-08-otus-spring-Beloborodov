@@ -20,7 +20,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     public void listAllQuestions() throws IOException {
         List<Question> questions = (ArrayList) questionDAO.getAll();
-        outputService.setOutputStream(System.out);
 
         questions.forEach((q) -> {
             outputService.out("Question: " + q.getQuestionText() + ", answer: " + q.getAnswerText());

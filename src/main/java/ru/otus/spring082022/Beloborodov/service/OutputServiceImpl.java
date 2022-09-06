@@ -1,14 +1,12 @@
 package ru.otus.spring082022.Beloborodov.service;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
 
 public class OutputServiceImpl implements OutputService {
+    private final PrintStream printStream;
 
-    PrintStream printStream;
-
-    public OutputServiceImpl() {
-
+    public OutputServiceImpl(PrintStream printStream) {
+        this.printStream = printStream;
     }
 
     @Override
@@ -17,8 +15,4 @@ public class OutputServiceImpl implements OutputService {
 
     }
 
-    @Override
-    public void setOutputStream(OutputStream outputStream) {
-        this.printStream = new PrintStream(outputStream);
-    }
 }
