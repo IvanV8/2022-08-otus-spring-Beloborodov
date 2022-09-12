@@ -12,7 +12,7 @@ public class QuestionTest {
     @DisplayName("корректно создается конструктором")
     @Test
     void shouldHaveCorrectConstructor() {
-        Question question = new Question("Вопрос");
+        Question question = new Question("Вопрос", "Правильный ответ");
         assertEquals("Вопрос", question.getQuestionText());
     }
 

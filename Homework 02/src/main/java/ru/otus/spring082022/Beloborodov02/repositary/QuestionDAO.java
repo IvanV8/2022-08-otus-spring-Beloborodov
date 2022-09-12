@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface QuestionDAO {
 
-        List<Question> getAllQuestions();
-
-        String getAnswer();
+        List<Question> getAllQuestions(int maxNumberOfQuestions);
 
 }

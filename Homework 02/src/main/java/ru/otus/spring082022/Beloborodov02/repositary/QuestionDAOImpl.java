@@ -2,8 +2,8 @@ package ru.otus.spring082022.Beloborodov02.repositary;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.otus.spring082022.Beloborodov02.appconfig.AppConfig;
 import ru.otus.spring082022.Beloborodov02.domain.Question;
 
 import java.io.BufferedReader;
@@ -14,20 +14,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component
 public class QuestionDAOImpl implements QuestionDAO {
 
 
-    private final String csvPath;
+    @Value("${questions.path}")
+    private String csvPath;
 
-    private final AppConfig appConfig;
-
-    public QuestionDAOImpl(AppConfig appConfig) {
-        this.appConfig = appConfig;
-
-        this.csvPath = appConfig.getQuestionsPath();
-    }
 
     private InputStream getFileFromResourceAsStream(String fileName) {
 
@@ -45,7 +40,7 @@ public class QuestionDAOImpl implements QuestionDAO {
     }
 
     @Override
-    public List<Question> getAllQuestions() {
+    public List<Question> getAllQuestions(int maxNumberOfQuestions) {
         List<Question> questions = new ArrayList<>();
 
         InputStream is = getFileFromResourceAsStream(csvPath);
@@ -57,14 +52,17 @@ public class QuestionDAOImpl implements QuestionDAO {
             // read csv file
             Iterator<CSVRecord> records = CSVFormat.DEFAULT.parse(reader).iterator();
             int i = 1;
-            while (records.hasNext() && i <= appConfig.getNumberOfQuestions()) {
-                Question q = new Question(records.next().get(0));
+            while (records.hasNext() && (i <= maxNumberOfQuestions || maxNumberOfQuestions == 0)) {
+                CSVRecord r = records.next();
+                Question q = new Question(r.get(0), r.get(1));
                 questions.add(q);
                 i++;
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new InOutQuestionException(e);
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException("Wrong format of file");
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Could not parse fields from line");
         }
@@ -72,8 +70,4 @@ public class QuestionDAOImpl implements QuestionDAO {
     }
 
 
-    @Override
-    public String getAnswer() {
-        return null;
-    }
 }
