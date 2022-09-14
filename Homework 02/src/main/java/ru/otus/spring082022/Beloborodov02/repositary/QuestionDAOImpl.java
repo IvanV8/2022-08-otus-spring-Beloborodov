@@ -7,21 +7,20 @@ import org.springframework.stereotype.Component;
 import ru.otus.spring082022.Beloborodov02.domain.Question;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Component
 public class QuestionDAOImpl implements QuestionDAO {
+    private final String csvPath;
 
-
-    @Value("${questions.path}")
-    private String csvPath;
+    public QuestionDAOImpl(@Value("${questions.path}") String csvPath) {
+        this.csvPath = csvPath;
+    }
 
 
     private InputStream getFileFromResourceAsStream(String fileName) {
@@ -59,12 +58,8 @@ public class QuestionDAOImpl implements QuestionDAO {
                 i++;
             }
 
-        } catch (IOException e) {
-            throw new InOutQuestionException(e);
-        } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("Wrong format of file");
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Could not parse fields from line");
+        } catch (Exception e) {
+            throw new QuestionException(e.getMessage(), e);
         }
         return questions;
     }

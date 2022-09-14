@@ -32,17 +32,23 @@ public class QuestionServiceImpl implements QuestionService {
 
         questions.forEach((q) -> {
             inoutService.outStringn("Question: " + q.getQuestionText());
-            q.setAnswerText(inoutService.inStringWithPrompt("Your answer:"));
+            student.addAnswer(inoutService.inStringWithPrompt("Your answer:"));
         });
-        int i = 0;
+        int rightAnswers = 0;
         inoutService.outStringn("Student:" + student.getFullName());
-        for (Question q : questions) {
-            inoutService.outStringn("Question: " + q.getQuestionText());
-            inoutService.outStringn("Right answer: " + q.getRightAnswerText());
-            inoutService.outStringn("Your answer: " + q.getAnswerText());
-            if (q.isRightAnswer()) i++;
+        for (int i = 0; i < questions.size(); i++) {
+            inoutService.outStringn("Question: " + questions.get(i).getQuestionText());
+            inoutService.outStringn("Right answer: " + questions.get(i).getRightAnswerText());
+            String answer = student.getAnswer(i);
+            if (answer != null) {
+                inoutService.outStringn("Your answer: " + answer);
+                if (questions.get(i).isRightAnswer(answer)) {
+                    rightAnswers++;
+                }
+            }
+
         }
-        inoutService.outStringn(String.format("Your score: %d/%d", i, questions.size()));
+        inoutService.outStringn(String.format("Your score: %d/%d", rightAnswers, questions.size()));
 
     }
 }

@@ -9,12 +9,15 @@ import java.util.Scanner;
 
 @Component
 public class IOProvider {
-    @Value("#{T(java.lang.System).out}")
-    private PrintStream outStream;
 
-    @Value("#{T(java.lang.System).in}")
-    private InputStream inStream;
+    private final PrintStream outStream;
+    private final InputStream inStream;
 
+    public IOProvider(@Value("#{T(java.lang.System).out}") PrintStream outStream,
+                      @Value("#{T(java.lang.System).in}") InputStream inStream) {
+        this.outStream = outStream;
+        this.inStream = inStream;
+    }
 
     public PrintStream getOutStream() {
         return outStream;
