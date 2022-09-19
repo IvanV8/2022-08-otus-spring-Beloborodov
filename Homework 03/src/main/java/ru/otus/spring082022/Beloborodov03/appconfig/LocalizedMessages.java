@@ -5,6 +5,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 
+// Класс сервис для получения локализованных сообщений i18n
+
 @Component
 public class LocalizedMessages {
 

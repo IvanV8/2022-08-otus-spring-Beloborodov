@@ -1,5 +1,7 @@
 package ru.otus.spring082022.Beloborodov03.domain;
 
+
+// класс-домен для хранения вопросов
 public class Question {
     private final String questionText;
     private final String rightAnswerText;

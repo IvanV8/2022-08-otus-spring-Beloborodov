@@ -43,7 +43,7 @@ public class QuestionDAOImpl implements QuestionDAO {
     @Override
     public List<Question> getAllQuestions(int maxNumberOfQuestions) {
         List<Question> questions = new ArrayList<>();
-
+        // получение имени файла - ресурса
         InputStream is = getFileFromResourceAsStream(appProps.getCsvpath());
 
         try (InputStreamReader streamReader =

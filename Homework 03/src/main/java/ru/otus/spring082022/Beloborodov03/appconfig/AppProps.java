@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Locale;
 
+// Класс для получения properties из yml
 
 @ConfigurationProperties(prefix = "application")
 public class AppProps {
@@ -28,6 +29,7 @@ public class AppProps {
         this.maxnumberofquestions = maxnumberofquestions;
     }
 
+    // при получении csv файла с вопросами используется locale. Название языка добавляется к имени файла
     public String getCsvpath() {
 
         String s = locale.toString();

@@ -3,6 +3,8 @@ package ru.otus.spring082022.Beloborodov03.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// класс -домен для результатов тестов студентов
 public class ResultTest {
     Student student;
     List<String> answers;
