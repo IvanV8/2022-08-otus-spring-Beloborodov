@@ -9,6 +9,7 @@ import ru.otus.spring082022.Beloborodov03.service.QuestionService;
 
 import java.util.Arrays;
 
+// Класс для реализации консольного ввода вывода
 
 @Component
 public class ConsoleService implements CommandLineRunner {

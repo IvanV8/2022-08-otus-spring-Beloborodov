@@ -24,12 +24,15 @@ public class InOutServiceImpl implements InOutService {
     }
 
 
+    // вывод локализованной строки без перевода каретки по шаблону (localized=true) или произвольной строки ((localized=false)
     @Override
     public void outString(boolean localized, String textMessageCode) {
         printStream.print(
                 localized ? localizedMessages.getLocalizedMessage(textMessageCode) : textMessageCode);
     }
 
+    // вывод локализованной строки с переводом   каретки по шаблону
+    // (localized=true) или произвольной строки ((localized=false) в консоль
     @Override
     public void outStringn(boolean localized, String textMessageCode) {
         printStream.println(
