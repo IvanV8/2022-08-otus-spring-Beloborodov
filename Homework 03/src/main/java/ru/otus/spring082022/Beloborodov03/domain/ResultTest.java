@@ -6,8 +6,8 @@ import java.util.List;
 
 // класс -домен для результатов тестов студентов
 public class ResultTest {
-    Student student;
-    List<String> answers;
+    private final Student student;
+    private List<String> answers;
 
     public ResultTest(Student student) {
         this.student = student;

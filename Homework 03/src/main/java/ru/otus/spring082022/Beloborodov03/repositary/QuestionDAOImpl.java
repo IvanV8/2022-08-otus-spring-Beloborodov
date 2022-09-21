@@ -4,7 +4,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.otus.spring082022.Beloborodov03.appconfig.AppProps;
+import ru.otus.spring082022.Beloborodov03.appconfig.QuestionsPathProvider;
 import ru.otus.spring082022.Beloborodov03.domain.Question;
 
 import java.io.BufferedReader;
@@ -18,11 +18,11 @@ import java.util.List;
 @Component
 public class QuestionDAOImpl implements QuestionDAO {
 
-    AppProps appProps;
+    private final QuestionsPathProvider qustionDataProvider;
 
     @Autowired
-    public QuestionDAOImpl(AppProps appProps) {
-        this.appProps = appProps;
+    public QuestionDAOImpl(QuestionsPathProvider qustionDataProvider) {
+        this.qustionDataProvider = qustionDataProvider;
     }
 
     private InputStream getFileFromResourceAsStream(String fileName) {
@@ -37,14 +37,13 @@ public class QuestionDAOImpl implements QuestionDAO {
         } else {
             return inputStream;
         }
-
     }
 
     @Override
     public List<Question> getAllQuestions(int maxNumberOfQuestions) {
         List<Question> questions = new ArrayList<>();
         // получение имени файла - ресурса
-        InputStream is = getFileFromResourceAsStream(appProps.getCsvpath());
+        InputStream is = getFileFromResourceAsStream(qustionDataProvider.getQuestionsPath());
 
         try (InputStreamReader streamReader =
                      new InputStreamReader(is, StandardCharsets.UTF_8);

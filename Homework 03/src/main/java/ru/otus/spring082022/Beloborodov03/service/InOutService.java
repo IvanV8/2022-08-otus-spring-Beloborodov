@@ -3,10 +3,13 @@ package ru.otus.spring082022.Beloborodov03.service;
 public interface InOutService {
 
 
-    void outStringn(boolean localized, String textMessage);
+    public void PatternMessage(String patternID);
 
-    String inStringWithPrompt(boolean localized, String textMessageCode);
+    public void TextMessage(String message);
+
+    public void TextMessageWithCR(String message);
+
+    String EnterStringWithPatternPrompt(String patternID);
 
 
-    void outString(boolean b, String s);
 }

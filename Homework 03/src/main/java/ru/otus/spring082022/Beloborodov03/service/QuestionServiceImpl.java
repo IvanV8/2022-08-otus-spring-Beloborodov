@@ -27,36 +27,36 @@ public class QuestionServiceImpl implements QuestionService {
     public void doTest() {
         List<Question> questions = questionDAO.getAllQuestions(appProps.getMaxnumberofquestions());
 
-        String firstName = inoutService.inStringWithPrompt(true, "hello.firstname");
-        String lastName = inoutService.inStringWithPrompt(true, "hello.lastname");
+        String firstName = inoutService.EnterStringWithPatternPrompt("hello.firstname");
+        String lastName = inoutService.EnterStringWithPatternPrompt("hello.lastname");
         Student student = new Student(firstName, lastName);
         ResultTest resultTest = new ResultTest(student);
 
         questions.forEach((q) -> {
-            inoutService.outString(true, "result.question");
-            inoutService.outStringn(false, q.getQuestionText());
-            resultTest.addAnswer(inoutService.inStringWithPrompt(true, "result.youranswer"));
+            inoutService.PatternMessage("result.question");
+            inoutService.TextMessageWithCR(q.getQuestionText());
+            resultTest.addAnswer(inoutService.EnterStringWithPatternPrompt("result.youranswer"));
         });
         int rightAnswers = 0;
-        inoutService.outString(true, "result.student");
-        inoutService.outStringn(false, student.getFullName());
+        inoutService.PatternMessage("result.student");
+        inoutService.TextMessage(student.getFullName());
         for (int i = 0; i < questions.size(); i++) {
-            inoutService.outString(true, "result.question");
-            inoutService.outStringn(false, questions.get(i).getQuestionText());
-            inoutService.outString(true, "result.rightanswer");
-            inoutService.outString(false, questions.get(i).getRightAnswerText());
+            inoutService.PatternMessage("result.question");
+            inoutService.TextMessageWithCR(questions.get(i).getQuestionText());
+            inoutService.PatternMessage("result.rightanswer");
+            inoutService.TextMessageWithCR(questions.get(i).getRightAnswerText());
             String answer = resultTest.getAnswer(i);
             if (answer != null) {
-                inoutService.outString(true, "result.youranswer");
-                inoutService.outStringn(false, answer);
+                inoutService.PatternMessage("result.youranswer");
+                inoutService.TextMessageWithCR(answer);
                 if (questions.get(i).isRightAnswer(answer)) {
                     rightAnswers++;
                 }
             }
 
         }
-        inoutService.outString(true, "result.yourscore");
-        inoutService.outStringn(false, String.format(" %d/%d", rightAnswers, questions.size()));
+        inoutService.PatternMessage("result.yourscore");
+        inoutService.TextMessageWithCR(String.format(" %d/%d", rightAnswers, questions.size()));
 
 
     }

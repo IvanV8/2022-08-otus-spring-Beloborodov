@@ -1,10 +1,10 @@
 spring:
   messages:
-    basename: "i18n/questions"
+    basename: "i18n/message_pattern"
     encoding: "UTF-8"
 
 application:
-  csvpath: "i18n/questions.csv"
+  questionspath: "i18n/questions.csv"
   maxnumberofquestions: 5
   locale: Ru
 server:

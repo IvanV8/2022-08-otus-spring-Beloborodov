@@ -7,12 +7,13 @@ import java.util.Locale;
 // Класс для получения properties из yml
 
 @ConfigurationProperties(prefix = "application")
-public class AppProps {
+public class AppProps implements LocaleDataProvider, QuestionsPathProvider {
 
     private Locale locale;
     private int maxnumberofquestions;
-    private String csvpath;
+    private String questionspath;
 
+    @Override
     public Locale getLocale() {
         return locale;
     }
@@ -30,14 +31,16 @@ public class AppProps {
     }
 
     // при получении csv файла с вопросами используется locale. Название языка добавляется к имени файла
-    public String getCsvpath() {
+    @Override
+    public String getQuestionsPath() {
 
         String s = locale.toString();
-        return new StringBuffer(csvpath).insert(csvpath.length() - 4, "_" + s).toString();
+        return new StringBuffer(questionspath).insert(questionspath.length() - 4, "_" + s).toString();
     }
 
-    public void setCsvpath(String csvpath) {
-        this.csvpath = csvpath;
+    @Override
+    public void setQuestionsPath(String questionspath) {
+        this.questionspath = questionspath;
     }
 
 
