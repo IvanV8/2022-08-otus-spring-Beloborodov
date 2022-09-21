@@ -9,14 +9,17 @@ import ru.otus.spring082022.Beloborodov03.service.QuestionService;
 
 import java.util.Arrays;
 
-// Класс для реализации консольного ввода вывода
 
 @Component
-public class ConsoleService implements CommandLineRunner {
-    private static final Logger logger = LoggerFactory.getLogger(ConsoleService.class);
+public class CommandLineService implements CommandLineRunner {
+    private static final Logger logger = LoggerFactory.getLogger(CommandLineService.class);
+
+    private final QuestionService questionService;
 
     @Autowired
-    QuestionService questionService;
+    public CommandLineService(QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
     @Override
     public void run(String... args) {
