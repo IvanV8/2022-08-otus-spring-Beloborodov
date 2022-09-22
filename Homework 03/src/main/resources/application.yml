@@ -6,6 +6,6 @@ spring:
 application:
   questionspath: "i18n/questions.csv"
   maxnumberofquestions: 5
-  locale: Ru
+  locale: ru
 server:
   port: 8090

@@ -8,14 +8,14 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 @Service
-public class ConsoleServiceImpl implements ConsoleService {
+public class StreamInOutServiceImpl implements StreamInOutService {
     private final PrintStream printStream;
 
     private final Scanner inStream;
 
 
     @Autowired
-    public ConsoleServiceImpl(IOProvider ioProvider) {
+    public StreamInOutServiceImpl(IOProvider ioProvider) {
         this.printStream = ioProvider.getOutStream();
         this.inStream = ioProvider.getInStream();
     }
