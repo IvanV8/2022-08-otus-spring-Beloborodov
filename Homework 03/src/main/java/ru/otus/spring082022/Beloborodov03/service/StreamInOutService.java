@@ -1,7 +1,7 @@
 package ru.otus.spring082022.Beloborodov03.service;
 
 
-public interface ConsoleService {
+public interface StreamInOutService {
 
     String inString();
 
