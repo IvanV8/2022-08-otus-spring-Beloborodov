@@ -14,13 +14,11 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionDAO questionDAO;
-
     private final LocalizedIOService inoutService;
     private final AppProps appProps;
 
     @Autowired
     public QuestionServiceImpl(QuestionDAO questionDAO, LocalizedIOService inoutService, AppProps appProps) {
-
         this.questionDAO = questionDAO;
         this.inoutService = inoutService;
         this.appProps = appProps;
