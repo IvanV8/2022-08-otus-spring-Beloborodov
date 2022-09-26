@@ -1,6 +1,6 @@
 package ru.otus.spring082022.Beloborodov03.service;
 
-public interface InOutService {
+public interface LocalizedIOService {
 
 
     void patternMessage(String patternID);
