@@ -1,4 +1,5 @@
 package ru.otus.spring082022.Beloborodov;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.spring082022.Beloborodov.domain.Question;

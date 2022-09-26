@@ -3,7 +3,6 @@ package ru.otus.spring082022.Beloborodov;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.otus.spring082022.Beloborodov.service.QuestionService;
-import ru.otus.spring082022.Beloborodov.service.QuestionServiceImpl;
 
 import java.io.IOException;
 

@@ -5,6 +5,6 @@ import java.io.IOException;
 
 public interface QuestionService {
 
-     void listAllQuestions() throws IOException;
+    void listAllQuestions() throws IOException;
 
 }
