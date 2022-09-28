@@ -1,0 +1,17 @@
+spring:
+  messages:
+    basename: "i18n/message_pattern"
+    encoding: "UTF-8"
+
+application:
+  questionspath: "i18n/questions.csv"
+  maxnumberofquestions: 5
+  locale: ru
+server:
+  port: 8090
+
+logging:
+  level:
+    root: ERROR
+
+
