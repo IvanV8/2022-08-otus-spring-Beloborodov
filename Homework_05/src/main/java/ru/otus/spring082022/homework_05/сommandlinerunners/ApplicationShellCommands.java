@@ -60,8 +60,8 @@ public class ApplicationShellCommands {
 
     @ShellMethod(value = "New", key = {"n", "new"}, group = "Books")
     public void newBook() {
-        bookService.newBook();
-        ;
+
+        ioService.outStringn(String.format("New book added with id:%d", bookService.newBook()));
     }
 
 

@@ -60,7 +60,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void newBook() {
+    public long newBook() {
         try {
             String title = ioService.inStringWithPrompt("Enter TITLE:");
             String isbn = ioService.inStringWithPrompt("Enter ISBN:");
@@ -75,9 +75,10 @@ public class BookServiceImpl implements BookService {
                 throw new ObjectNotFoundException(String.format("No genre found with id:%d", genre_id));
             }
             Book book = new Book(0, title, isbn, author, genre);
-            ioService.outStringn(String.format("New book added with id:%d", bookDAO.insert(book)));
+            return bookDAO.insert(book);
         } catch (ObjectNotFoundException e) {
             ioService.outStringn(e.getMessage());
+            return 0;
         }
     }
 
@@ -117,7 +118,7 @@ public class BookServiceImpl implements BookService {
                 throw new ObjectNotFoundException(String.format("No genre found with id:%d", genre_id));
             }
             bookDAO.update(new Book(id, title, isbn, author, genre));
-            ioService.outStringn(String.format("Book updated with id:%d", id));
+
         } catch (ObjectNotFoundException e) {
             ioService.outStringn(e.getMessage());
         }

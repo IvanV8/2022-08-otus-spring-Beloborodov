@@ -12,7 +12,7 @@ public interface BookService {
 
     List<Author> listAllAuthors();
 
-    void newBook();
+    long newBook();
 
     void updateBook(long id);
 
