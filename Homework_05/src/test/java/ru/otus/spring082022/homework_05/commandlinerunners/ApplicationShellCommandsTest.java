@@ -1,4 +1,4 @@
-package ru.otus.spring082022.homework_05;
+package ru.otus.spring082022.homework_05.commandlinerunners;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

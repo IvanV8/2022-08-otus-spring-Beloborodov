@@ -66,7 +66,7 @@ public class BookDAOJdbc implements BookDAO {
     }
 
     @Override
-    public void updateById(Book book) {
+    public void update(Book book) {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("id", book.getId())
                 .addValue("title", book.getTitle())

@@ -116,7 +116,7 @@ public class BookServiceImpl implements BookService {
             if (genre == null) {
                 throw new ObjectNotFoundException(String.format("No genre found with id:%d", genre_id));
             }
-            bookDAO.updateById(new Book(id, title, isbn, author, genre));
+            bookDAO.update(new Book(id, title, isbn, author, genre));
             ioService.outStringn(String.format("Book updated with id:%d", id));
         } catch (ObjectNotFoundException e) {
             ioService.outStringn(e.getMessage());

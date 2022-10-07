@@ -1,13 +1,10 @@
-package ru.otus.spring082022.homework_05;
+package ru.otus.spring082022.homework_05.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.transaction.AfterTransaction;
-import org.springframework.test.context.transaction.BeforeTransaction;
-import ru.otus.spring082022.homework_05.dao.*;
 import ru.otus.spring082022.homework_05.domain.Author;
 import ru.otus.spring082022.homework_05.domain.Book;
 import ru.otus.spring082022.homework_05.domain.Genre;
@@ -41,15 +38,6 @@ public class BookDAOJdbcTest {
     private GenreDAO genreDAO;
 
 
-    @BeforeTransaction
-    void beforeTransaction() {
-        System.out.println("beforeTransaction");
-    }
-
-    @AfterTransaction
-    void afterTransaction() {
-        System.out.println("afterTransaction");
-    }
 
     @DisplayName("возвращать ожидаемое количество книг в БД")
     @Test
@@ -90,7 +78,7 @@ public class BookDAOJdbcTest {
 
         List<Book> actualBookList = bookDao.getAll();
         assertThat(actualBookList)
-                .containsExactlyInAnyOrder(expectedBook);
+                .contains(expectedBook);
     }
 
     @DisplayName("удалять книгу по  id")

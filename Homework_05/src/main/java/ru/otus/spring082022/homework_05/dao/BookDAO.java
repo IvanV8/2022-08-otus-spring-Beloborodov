@@ -12,7 +12,7 @@ public interface BookDAO {
 
     Book getById(long id);
 
-    void updateById(Book book);
+    void update(Book book);
 
     List<Book> getAll();
 
