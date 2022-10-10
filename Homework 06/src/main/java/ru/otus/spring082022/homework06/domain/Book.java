@@ -1,0 +1,47 @@
+package ru.otus.spring082022.homework06.domain;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
+import java.util.List;
+
+
+@NoArgsConstructor
+@Data
+@AllArgsConstructor
+@Entity
+@Table(name = "books")
+public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(name = "title", nullable = false, unique = false)
+    private String title;
+    @Column(name = "isbn", nullable = false, unique = true)
+    private String isbn;
+
+    @ManyToOne(targetEntity = Author.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private Author author;
+    @ManyToOne(targetEntity = Genre.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "genre_id", referencedColumnName = "id")
+    private Genre genre;
+    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "book_id")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Comment> comments;
+
+
+    public Book(long i, String title, String isbn, Author author, Genre genre) {
+        this.id = id;
+        this.title = title;
+        this.isbn = isbn;
+        this.author = author;
+        this.genre = genre;
+    }
+}
