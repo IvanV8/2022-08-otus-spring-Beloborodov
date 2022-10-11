@@ -11,6 +11,7 @@ import ru.otus.spring082022.homework06.repositories.BookRepository;
 import ru.otus.spring082022.homework06.repositories.CommentRepository;
 import ru.otus.spring082022.homework06.repositories.GenreRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -91,6 +92,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public long newBook() {
         try {
             String title = ioService.inStringWithPrompt("Enter TITLE:");

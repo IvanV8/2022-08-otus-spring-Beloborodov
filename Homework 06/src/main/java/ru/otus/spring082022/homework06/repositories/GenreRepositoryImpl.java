@@ -30,7 +30,7 @@ public class GenreRepositoryImpl implements GenreRepository {
     @Override
     public Optional<Genre> getById(long id) {
         TypedQuery<Genre> query = em.createQuery(
-                "select a from Author a where a.id = :id"
+                "select a from Genre a where a.id = :id"
                 , Genre.class);
         query.setParameter("id", id);
         try {

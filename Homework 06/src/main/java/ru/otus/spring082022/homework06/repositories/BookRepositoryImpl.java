@@ -39,6 +39,7 @@ public class BookRepositoryImpl implements BookRepository {
 
 
     @Override
+    @Transactional
     public Book save(Book book) {
         if (book.getId() <= 0) {
             em.persist(book);
@@ -59,18 +60,19 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public List<Book> getAllWithComments() {
         TypedQuery<Book> query = em.createQuery(
-                "select b from Book b join fetch b.author join fetch b.genre", Book.class);
+                "select b from Book b join fetch b.author join fetch b.genre left join fetch b.comments", Book.class);
         return query.getResultList();
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from Book b " +
-                "where b.id = :id");
+        TypedQuery<Book> query = em.createQuery(
+                "select b from Book b where b.id = :id"
+                , Book.class);
         query.setParameter("id", id);
-        query.executeUpdate();
+        em.remove(query.getSingleResult());
+
     }
 }
 

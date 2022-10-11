@@ -23,7 +23,7 @@ public class Comment {
     private LocalDateTime commentDateTime;
     @Column(name = "text", nullable = false, unique = false)
     private String text;
-    @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Book.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", referencedColumnName = "id", nullable = false)
     private Book book;
 }
