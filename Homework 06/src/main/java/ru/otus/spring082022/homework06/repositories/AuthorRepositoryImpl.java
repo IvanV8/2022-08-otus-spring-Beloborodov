@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 import ru.otus.spring082022.homework06.domain.Author;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -29,15 +28,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     @Override
     public Optional<Author> getById(long id) {
-        TypedQuery<Author> query = em.createQuery(
-                "select a from Author a where a.id = :id"
-                , Author.class);
-        query.setParameter("id", id);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(em.find(Author.class, id));
     }
 
 }

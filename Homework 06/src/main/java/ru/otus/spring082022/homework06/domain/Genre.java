@@ -1,15 +1,16 @@
 package ru.otus.spring082022.homework06.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
 @Table(name = "genres")
 public class Genre {
     @Id

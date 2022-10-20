@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.spring082022.homework06.domain.Author;
 import ru.otus.spring082022.homework06.repositories.AuthorRepositoryImpl;
@@ -28,8 +27,6 @@ public class AuthorRepositoryTest {
     @Autowired
     private AuthorRepositoryImpl repositoryJpa;
 
-    @Autowired
-    private TestEntityManager em;
 
     @DisplayName("возвращать ожидаемого автора по его id")
     @Test
@@ -45,11 +42,9 @@ public class AuthorRepositoryTest {
     @Test
     void shouldReturnExpectedAuthorList() {
 
-        Author expectedAuthor = new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME);
-
         List<Author> actualAuthorList = repositoryJpa.getAll();
-        assertThat(actualAuthorList)
-                .contains(expectedAuthor);
+        assertThat(actualAuthorList.stream().anyMatch(s -> s.getName().equals(EXISTING_BOOK_AUTHOR_NAME)));
+
     }
 
 

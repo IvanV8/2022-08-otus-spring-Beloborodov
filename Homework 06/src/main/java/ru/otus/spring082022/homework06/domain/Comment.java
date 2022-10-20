@@ -2,15 +2,15 @@ package ru.otus.spring082022.homework06.domain;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Data
 @AllArgsConstructor
+@Getter
 @Entity
 @Table(name = "comments")
 public class Comment {

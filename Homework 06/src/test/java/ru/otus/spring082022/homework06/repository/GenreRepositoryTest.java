@@ -1,6 +1,5 @@
 package ru.otus.spring082022.homework06.repository;
 
-import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import ru.otus.spring082022.homework06.domain.Genre;
 import ru.otus.spring082022.homework06.repositories.GenreRepositoryImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,10 +37,9 @@ public class GenreRepositoryTest {
     void shouldReturnExpectedGenreById() {
 
 
-        val actualGenre = repositoryJpa.getById(EXISTING_BOOK_GENRE_ID);
-        val expectedGenre = em.find(Genre.class, EXISTING_BOOK_GENRE_ID);
-        assertThat(actualGenre).isPresent().get()
-                .usingRecursiveComparison().isEqualTo(expectedGenre);
+        Optional<Genre> genre = repositoryJpa.getById(EXISTING_BOOK_GENRE_ID);
+        assertThat(genre).isNotEmpty().get()
+                .hasFieldOrPropertyWithValue("name", EXISTING_BOOK_GENRE_NAME);
     }
 
 
@@ -51,8 +50,7 @@ public class GenreRepositoryTest {
         Genre expectedGenre = new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME);
 
         List<Genre> actualGenreList = repositoryJpa.getAll();
-        assertThat(actualGenreList)
-                .contains(expectedGenre);
+        assertThat(actualGenreList.stream().anyMatch(s -> s.getName().equals(EXISTING_BOOK_GENRE_NAME)));
     }
 
 

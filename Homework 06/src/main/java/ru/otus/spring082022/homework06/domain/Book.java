@@ -2,7 +2,7 @@ package ru.otus.spring082022.homework06.domain;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -10,9 +10,9 @@ import java.util.List;
 
 
 @NoArgsConstructor
-@Data
 @AllArgsConstructor
 @Entity
+@Getter
 @Table(name = "books")
 public class Book {
     @Id
@@ -41,7 +41,7 @@ public class Book {
         this.genre = genre;
     }
 
-    public String toString() {
-        return this.title + " by  " + this.author.getName();
-    }
+    //  public String toString() {
+    // return this.title + " by  " + this.author.getName();
+    //}
 }

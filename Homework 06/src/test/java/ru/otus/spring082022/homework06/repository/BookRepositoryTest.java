@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.spring082022.homework06.domain.Author;
 import ru.otus.spring082022.homework06.domain.Book;
@@ -37,8 +36,6 @@ public class BookRepositoryTest {
     private BookRepositoryImpl bookRepository;
 
 
-    @Autowired
-    private TestEntityManager em;
 
     @DisplayName("возвращать ожидаемое количество книг в БД")
     @Test

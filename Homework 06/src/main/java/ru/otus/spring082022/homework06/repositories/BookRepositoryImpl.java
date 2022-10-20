@@ -2,9 +2,12 @@ package ru.otus.spring082022.homework06.repositories;
 
 import org.springframework.stereotype.Repository;
 import ru.otus.spring082022.homework06.domain.Book;
+import ru.otus.spring082022.homework06.service.ObjectNotFoundException;
 
-import javax.persistence.*;
-import javax.transaction.Transactional;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,20 +29,11 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Optional<Book> getById(long id) {
-        TypedQuery<Book> query = em.createQuery(
-                "select b from Book b where b.id = :id"
-                , Book.class);
-        query.setParameter("id", id);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(em.find(Book.class, id));
     }
 
 
     @Override
-    @Transactional
     public Book save(Book book) {
         if (book.getId() <= 0) {
             em.persist(book);
@@ -65,14 +59,13 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    @Transactional
     public void deleteById(long id) {
-        TypedQuery<Book> query = em.createQuery(
-                "select b from Book b where b.id = :id"
-                , Book.class);
-        query.setParameter("id", id);
-        em.remove(query.getSingleResult());
-
+        try {
+            Book book = Optional.ofNullable(em.find(Book.class, id)).orElseThrow(() -> new ObjectNotFoundException());
+            em.remove(em.find(Book.class, id));
+        } catch (Exception e) {
+            return;
+        }
     }
 }
 
