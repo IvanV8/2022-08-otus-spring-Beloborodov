@@ -41,7 +41,4 @@ public class Book {
         this.genre = genre;
     }
 
-    //  public String toString() {
-    // return this.title + " by  " + this.author.getName();
-    //}
 }
