@@ -4,10 +4,9 @@ import org.springframework.stereotype.Repository;
 import ru.otus.spring082022.homework06.domain.Comment;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,19 +22,11 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public Optional<Comment> getById(long id) {
-        TypedQuery<Comment> query = em.createQuery(
-                "select c from Comment c where c.id = :id"
-                , Comment.class);
-        query.setParameter("id", id);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(em.find(Comment.class, id));
     }
 
+
     @Override
-    @Transactional
     public Comment save(Comment comment) {
         if (comment.getId() <= 0) {
             em.persist(comment);
@@ -52,6 +43,18 @@ public class CommentRepositoryImpl implements CommentRepository {
                 "select c from Comment c where c.book.id=:book_id", Comment.class);
         query.setParameter("book_id", bookId);
         return query.getResultList();
+    }
+
+    @Override
+    public void deleteById(long id) {
+        getById(id).ifPresent(em::remove);
+    }
+
+    @Override
+    public void deleteAllByBook(long bookId) {
+        Query query = em.createQuery("delete from Comment c where c.book.id=:book_id");
+        query.setParameter("book_id", bookId);
+        query.executeUpdate();
     }
 
 

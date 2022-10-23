@@ -15,7 +15,6 @@ public interface BookRepository {
 
     List<Book> getAll();
 
-    List<Book> getAllWithComments();
 
     void deleteById(long id);
 

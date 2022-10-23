@@ -11,7 +11,11 @@ public interface BookService {
 
     List<Book> listAllBooks();
 
-    List<Book> listAllBooksWithComments();
+    List<Comment> listAllCommentsByBook(long bookId);
+
+    Comment updateComment(long id);
+
+    Book getBookById(long id);
 
     List<Author> listAllAuthors();
 
@@ -21,7 +25,7 @@ public interface BookService {
 
     List<Genre> listAllGenres();
 
-    void delete(long id);
+    void deleteBookById(long id);
 
     Long reportCount();
 

@@ -4,16 +4,18 @@ package ru.otus.spring082022.homework06.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Getter
+@Setter
 @Table(name = "books")
+@NamedEntityGraph(name = "book-author-genre-graph", attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,16 +31,5 @@ public class Book {
     @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id", referencedColumnName = "id")
     private Genre genre;
-    @OneToMany(targetEntity = Comment.class, mappedBy = "book", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Comment> comments;
-
-
-    public Book(long i, String title, String isbn, Author author, Genre genre) {
-        this.id = i;
-        this.title = title;
-        this.isbn = isbn;
-        this.author = author;
-        this.genre = genre;
-    }
 
 }

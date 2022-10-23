@@ -34,23 +34,8 @@ public class ApplicationShellCommands {
         }
     }
 
-    @ShellMethod(value = "ListComments", key = {"lc", "listcomments"}, group = "Books")
-    public void listBooksWithComments() {
-        List<Book> books = bookService.listAllBooksWithComments();
-        ioService.outStringn("         ID                            TITLE                ISBN                       AUTHOR                   GENRE");
-        ioService.outStringn("---------------------------------------------------------------------------------------------------------------------");
 
-        for (Book b : books) {
-            ioService.outStringn(String.format("%9d %35s %20s %28s %20s", b.getId(), b.getTitle(), b.getIsbn(), b.getAuthor().getName(), b.getGenre().getName()));
-            if (b.getComments().size() > 0) {
-                ioService.outStringn("Comments:");
-                for (Comment c : b.getComments()) {
-                    ioService.outStringn(String.format("           %20s, %tD: %50s",
-                            c.getUserName(), c.getCommentDateTime(), c.getText()));
-                }
-            }
-        }
-    }
+
 
 
     @ShellMethod(value = "Authors", key = {"a", "authors"}, group = "Books")
@@ -105,12 +90,12 @@ public class ApplicationShellCommands {
             id = ioService.inLongWithPrompt("Enter book ID:");
         List<Comment> comments = bookService.listCommentsByBook(id);
         if (comments == null || comments.size() == 0)
-            ioService.outStringn("No comments fo book.");
+            ioService.outStringn("No comments for book.");
         else {
             ioService.outStringn("Comments:");
             for (Comment c : comments) {
-                ioService.outStringn(String.format("           %20s, %tD: %50s",
-                        c.getUserName(), c.getCommentDateTime(), c.getText()));
+                ioService.outStringn(String.format("id:%d, author:%s, date:%tD, comment:%s",
+                        c.getId(), c.getUserName(), c.getCommentDateTime(), c.getText()));
             }
         }
     }
@@ -121,8 +106,7 @@ public class ApplicationShellCommands {
         if (id == 0)
             id = ioService.inLongWithPrompt("Enter ID:");
 
-
-        bookService.delete(id);
+        bookService.deleteBookById(id);
         return String.format("Book deleted with id:%d", id);
     }
 

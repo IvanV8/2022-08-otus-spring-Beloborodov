@@ -2,14 +2,12 @@ package ru.otus.spring082022.homework06.repositories;
 
 import org.springframework.stereotype.Repository;
 import ru.otus.spring082022.homework06.domain.Book;
-import ru.otus.spring082022.homework06.service.ObjectNotFoundException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository {
@@ -45,27 +43,17 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public List<Book> getAll() {
-        TypedQuery<Book> query = em.createQuery(
-                "select b from Book b join fetch b.author join fetch b.genre", Book.class);
+        EntityGraph<?> entityGraph = em.createEntityGraph("book-author-genre-graph");
+        TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
+        query.setHint(FETCH.getKey(), entityGraph);
         return query.getResultList();
 
     }
 
-    @Override
-    public List<Book> getAllWithComments() {
-        TypedQuery<Book> query = em.createQuery(
-                "select b from Book b join fetch b.author join fetch b.genre left join fetch b.comments", Book.class);
-        return query.getResultList();
-    }
 
     @Override
     public void deleteById(long id) {
-        try {
-            Book book = Optional.ofNullable(em.find(Book.class, id)).orElseThrow(() -> new ObjectNotFoundException());
-            em.remove(em.find(Book.class, id));
-        } catch (Exception e) {
-            return;
-        }
+        getById(id).ifPresent(em::remove);
     }
 }
 

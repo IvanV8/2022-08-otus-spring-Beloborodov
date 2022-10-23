@@ -17,7 +17,7 @@ public class ApplicationShellCommandsTest {
     private static final String COMMAND_DELETE_MESSAGE = "Book deleted with id:%d";
 
     private static final String COMMAND_DELETE_PATTERN = "%s %d";
-    private static final long CUSTOM_ID = 1;
+    private static final long CUSTOM_ID = 1L;
     private static final String COMMAND_DELETE_SHORT = "d";
 
     @Autowired

@@ -12,4 +12,8 @@ public interface CommentRepository {
 
     List<Comment> getAllByBook(long bookId);
 
+    void deleteById(long id);
+
+    void deleteAllByBook(long bookId);
+
 }
