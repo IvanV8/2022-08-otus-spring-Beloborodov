@@ -13,15 +13,15 @@ public interface BookService {
 
     List<Comment> listAllCommentsByBook(long bookId);
 
-    Comment updateComment(long id);
+    Comment updateComment(long id, String userName, String textComment);
 
     Book getBookById(long id);
 
     List<Author> listAllAuthors();
 
-    long newBook();
+    long newBook(String title, String isbn, long authorId, long genreId);
 
-    void updateBook(long id);
+    Book updateBook(long id, String title, String isbn, long authorId, long genreId);
 
     List<Genre> listAllGenres();
 
@@ -29,7 +29,7 @@ public interface BookService {
 
     Long reportCount();
 
-    long newComment();
+    long newComment(long bookId, String author, String comment);
 
     List<Comment> listCommentsByBook(long bookId);
 
