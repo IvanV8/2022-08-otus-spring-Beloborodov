@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
-    void deleteAllByBookId(long book_id);
+    void deleteAllByBookId(long bookId);
 
-    @Query("select c from comment c where c.book.id = :book_id")
-    List<Comment> findAllByBookId(@Param("book_id") long book_id);
+    @Query("select c from Comment c where c.book.id = :bookId")
+    List<Comment> findAllByBookId(@Param("bookId") long bookId);
 }
