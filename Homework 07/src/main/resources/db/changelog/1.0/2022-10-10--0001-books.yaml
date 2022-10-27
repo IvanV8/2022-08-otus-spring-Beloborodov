@@ -1,0 +1,108 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2022-10-10--0001--books-genres
+      author: ibeloborodov
+      context: main,test
+      createTable:
+        tableName: genres
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: genres_pk
+          - column:
+              name: name
+              type: varchar(255)
+  - changeSet:
+      id: 2022-10-10--0001--books-authors
+      author: ibeloborodov
+      context: main,test
+      createTable:
+        tableName: authors
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: authors_pk
+          - column:
+              name: name
+              type: varchar(255)
+  - changeSet:
+      id: 2022-10-10--0001--books-books
+      author: ibeloborodov
+      context: main,test
+      createTable:
+        tableName: books
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: books_pk
+          - column:
+              name: title
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: isbn
+              type: varchar(255)
+          - column:
+              name: author_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: books_author_id
+                references: authors(id)
+          - column:
+              name: genre_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: books_genre_id
+                references: genres(id)
+  - changeSet:
+      id: 2022-10-10--0001--books-comments
+      author: ibeloborodov
+      context: main,test
+      createTable:
+        tableName: comments
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: comments_pk
+          - column:
+              name: user_name
+              type: varchar(255)
+          - column:
+              name: text
+              type: varchar(255)
+          - column:
+              name: datetime
+              type: timestamp
+              defaultValueComputed: CURRENT_TIMESTAMP
+              constraints:
+                nullable: false
+          - column:
+              name: book_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: books_comment_id
+                references: books(id)
