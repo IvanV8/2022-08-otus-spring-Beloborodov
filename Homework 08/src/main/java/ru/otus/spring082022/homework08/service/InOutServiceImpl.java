@@ -30,11 +30,4 @@ public class InOutServiceImpl implements InOutService {
         printStream.print(prompt);
         return inStream.nextLine();
     }
-
-    @Override
-    public long inLongWithPrompt(String prompt) {
-        printStream.print(prompt);
-        return inStream.nextLong();
-    }
-
 }

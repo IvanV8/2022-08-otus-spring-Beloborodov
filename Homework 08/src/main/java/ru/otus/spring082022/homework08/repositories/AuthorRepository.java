@@ -4,6 +4,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.spring082022.homework08.domain.Author;
 
 
-public interface AuthorRepository extends MongoRepository<Author, Long> {
+public interface AuthorRepository extends MongoRepository<Author, String> {
 
 }

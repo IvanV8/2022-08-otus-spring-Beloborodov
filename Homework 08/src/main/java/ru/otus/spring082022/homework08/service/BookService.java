@@ -1,37 +1,30 @@
 package ru.otus.spring082022.homework08.service;
 
-import ru.otus.spring082022.homework08.domain.Author;
-import ru.otus.spring082022.homework08.domain.Book;
 import ru.otus.spring082022.homework08.domain.Comment;
-import ru.otus.spring082022.homework08.domain.Genre;
-
-import java.util.List;
 
 public interface BookService {
 
-    List<Book> listAllBooks();
+    void listAllBooks();
 
-    List<Comment> listAllCommentsByBook(long bookId);
+    Comment updateComment(String id);
 
-    Comment updateComment(long id);
+    void listAllAuthors();
 
-    Book getBookById(long id);
+    void newBook();
 
-    List<Author> listAllAuthors();
+    void updateBook(String id);
 
-    long newBook();
+    void listAllGenres();
 
-    void updateBook(long id);
+    void deleteBookById(String id);
 
-    List<Genre> listAllGenres();
+    void deleteBook(String id);
 
-    void deleteBookById(long id);
+    String reportCount();
 
-    Long reportCount();
+    void newComment();
 
-    long newComment();
-
-    List<Comment> listCommentsByBook(long bookId);
+    void listCommentsByBook(String bookId);
 
 
 }

@@ -11,10 +11,9 @@ import ru.otus.spring082022.homework08.repositories.BookRepository;
 import ru.otus.spring082022.homework08.repositories.CommentRepository;
 import ru.otus.spring082022.homework08.repositories.GenreRepository;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @Service
@@ -27,141 +26,157 @@ public class BookServiceImpl implements BookService {
     private final CommentRepository commentRepository;
     private final InOutService ioService;
 
+    private final PrintListsService printService;
+
     @Override
-    public List<Book> listAllBooks() {
-        return bookRepository.findAll();
+    public void listAllBooks() {
+        printService.PrintBooks(bookRepository.findAll());
     }
 
     @Override
-    public List<Comment> listAllCommentsByBook(long bookId) {
-        return commentRepository.findAllByBookId(bookId);
+    public void listCommentsByBook(String bookId) {
+        if (bookId.equals(""))
+            bookId = ioService.inStringWithPrompt("Enter book ID:");
+        List<Comment> comments = commentRepository.findAllByBookId(bookId);
+        if (comments == null || comments.size() == 0)
+            ioService.outStringn(String.format("No comments for book %s", bookId));
+        else {
+            printService.PrintComments(commentRepository.findAllByBookId(bookId));
+        }
     }
 
     @Override
-    public Comment updateComment(long id) {
-        Optional<Comment> comment = commentRepository.findById(id);
-        if (comment.isEmpty()) {
-            ioService.outStringn("Сomment not found with id");
+    public Comment updateComment(String id) {
+        try {
+            Comment comment = commentRepository.findById(id)
+                    .orElseThrow(() -> new ObjectNotFoundException("Comment not found"));
+            ioService.outStringn("Сurrent comment:");
+            ioService.outStringn(String.format("Author:%20s, Date:%tD: Comment:%50s",
+                    comment.getUserName(), comment.getCommentDateTime(), comment.getText()));
+            comment.setUserName(ioService.inStringWithPrompt("Author:"));
+            comment.setCommentDateTime(LocalDateTime.now());
+            comment.setText(ioService.inStringWithPrompt("Comment:"));
+            commentRepository.save(comment);
+            return comment;
+        } catch (ObjectNotFoundException e) {
             return null;
         }
-        ioService.outStringn("Сurrent comment:");
-        ioService.outStringn(String.format("Author:%20s, Date:%tD: Comment:%50s",
-                comment.get().getUserName(), comment.get().getCommentDateTime(), comment.get().getText()));
-        comment.get().setUserName(ioService.inStringWithPrompt("Author:"));
-        comment.get().setCommentDateTime(LocalDateTime.now());
-        comment.get().setText(ioService.inStringWithPrompt("Comment:"));
-        commentRepository.save(comment.get());
-        return comment.get();
-    }
-
-    @Override
-    public Book getBookById(long id) {
-        return bookRepository.findById(id).orElse(null);
     }
 
 
     @Override
-    public List<Author> listAllAuthors() {
-        return authorRepository.findAll();
+    public void listAllAuthors() {
+        printService.PrintAuthors(authorRepository.findAll());
 
     }
 
     @Override
-    public List<Genre> listAllGenres() {
-        return genreRepository.findAll();
+    public void listAllGenres() {
+        printService.PrintGenres(genreRepository.findAll());
 
     }
 
     @Override
-    @Transactional
-    public void deleteBookById(long id) {
-        commentRepository.deleteAllByBook(id);
-        bookRepository.deleteById(id);
-    }
-
-
-    @Override
-    public Long reportCount() {
-        return bookRepository.count();
-    }
-
-    @Override
-    public long newComment() {
+    public void deleteBookById(String id) {
         try {
-            long bookId = ioService.inLongWithPrompt("Enter book ID:");
-            Book book = bookRepository.findById(bookId)
-                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Книга не найдена с id:%d", bookId)));
-            String userName = ioService.inStringWithPrompt("Enter your name:");
-            String textComment = ioService.inStringWithPrompt("Enter your comment:");
-            Comment comment = new Comment(0, userName, LocalDateTime.now(), textComment, book);
-            return commentRepository.save(comment).getId();
+            if (id.equals("")) {
+                id = ioService.inStringWithPrompt("Enter ID:");
+            }
+            if (bookRepository.findById(id) == null)
+                throw new ObjectNotFoundException("Книга не найдена c заданным id");
+            commentRepository.deleteAllByBook(id);
+            bookRepository.deleteById(id);
         } catch (ObjectNotFoundException e) {
             ioService.outStringn("Не найден объект в БД с заданным id");
-            return 0;
+        }
+    }
+
+    @Override
+    public void deleteBook(String id) {
+        if (id.equals(""))
+            id = ioService.inStringWithPrompt("Enter ID:");
+        deleteBookById(id);
+        ioService.outStringn(String.format("Book deleted with id:%s", id));
+
+    }
+
+
+    @Override
+    public String reportCount() {
+        return String.format("Total number of books:%d", bookRepository.count());
+    }
+
+    @Override
+    public void newComment() {
+        try {
+            String bookId = ioService.inStringWithPrompt("Enter book ID:");
+            Book book = bookRepository.findById(bookId)
+                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Книга не найдена с id:%s", bookId)));
+            String userName = ioService.inStringWithPrompt("Enter your name:");
+            String textComment = ioService.inStringWithPrompt("Enter your comment:");
+            Comment comment = new Comment(userName, LocalDateTime.now(), textComment, book);
+            ioService.outStringn(String.format("New comment added with id:%s", commentRepository.save(comment).getId()));
+        } catch (ObjectNotFoundException e) {
+            ioService.outStringn("Не найден объект в БД с заданным id");
         }
     }
 
 
     @Override
-    public List<Comment> listCommentsByBook(long bookId) {
-        return commentRepository.findAllByBookId(bookId);
-    }
-
-    @Override
-    public long newBook() {
+    public void newBook() {
         try {
             String title = ioService.inStringWithPrompt("Enter TITLE:");
             String isbn = ioService.inStringWithPrompt("Enter ISBN:");
-            long author_id = ioService.inLongWithPrompt("Enter author id:");
-
-            long genre_id = ioService.inLongWithPrompt("Enter genre id:");
-            Author author = authorRepository.findById(author_id)
-                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Автор не найден с id:%d", author_id)));
-
-            Genre genre = genreRepository.findById(genre_id)
-                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Жанр не найден с id:%d", author_id)));
-            Book book = new Book(0, title, isbn, author, genre);
-            return bookRepository.save(book).getId();
+            String authorId = ioService.inStringWithPrompt("Enter author id:");
+            String genreId = ioService.inStringWithPrompt("Enter genre id:");
+            Author author = authorRepository.findById(authorId)
+                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Автор не найден с id:%s", authorId)));
+            Genre genre = genreRepository.findById(genreId)
+                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Жанр не найден с id:%s", genreId)));
+            Book book = new Book(title, isbn, author, genre);
+            bookRepository.save(book);
+            ioService.outStringn(String.format("New book added with id:%s", bookRepository.save(book).getId()));
         } catch (ObjectNotFoundException e) {
             ioService.outStringn("Не найден объект в БД с заданным id");
-            return 0;
         }
     }
 
     @Override
-    public void updateBook(long id) {
+    public void updateBook(String id) {
         try {
+            if (id.equals("")) {
+                id = ioService.inStringWithPrompt("Enter ID:");
+            }
+
             Book book = bookRepository.findById(id)
-                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Книга не найдена с id:%d", id)));
+                    .orElseThrow(() -> new ObjectNotFoundException("Книга не найдена c заданным id"));
             // если пользователь ввел пустую строку, то не меняем поле объекта
             String title = ioService.inStringWithPrompt(String.format("Enter new TITLE (Enter to leave:%s):", book.getTitle()));
             if (!title.equals("")) {
                 book.setTitle(title);
             }
-            // если пользователь ввел пустую строку, то не меняем поле объекта
             String isbn = ioService.inStringWithPrompt(String.format("Enter new ISBN (Enter to leave:%s):", book.getIsbn()));
             if (!isbn.equals("")) {
                 book.setIsbn(isbn);
             }
-            // если пользователь ввел 0, то не меняем поле объекта
-            long author_id = ioService.inLongWithPrompt(String.format("Enter new AUTHOR ID (Enter 0 to leave:%d):", book.getAuthor().getId()));
-            if (author_id == 0) {
-                author_id = book.getAuthor().getId();
+            String authorId = ioService.inStringWithPrompt(String.format("Enter new AUTHOR ID (Enter  to leave:%s):", book.getAuthor().getId()));
+            if (authorId.equals("")) {
+                authorId = book.getAuthor().getId();
             }
-            // если пользователь ввел 0, то не меняем поле объекта
-            long genre_id = ioService.inLongWithPrompt(String.format("Enter new GENRE ID (Enter 0 to leave:%d):", book.getGenre().getId()));
-            if (genre_id == 0) {
-                genre_id = book.getGenre().getId();
+            String genreId = ioService.inStringWithPrompt(String.format("Enter new GENRE ID (Enter  to leave:%s):", book.getGenre().getId()));
+            if (genreId.equals("")) {
+                genreId = book.getGenre().getId();
             }
-            Author author = authorRepository.findById(author_id)
+            Author author = authorRepository.findById(authorId)
                     .orElseThrow(() -> new ObjectNotFoundException("Автор не найден"));
 
-            Genre genre = genreRepository.findById(genre_id)
+            Genre genre = genreRepository.findById(genreId)
                     .orElseThrow(() -> new ObjectNotFoundException("Жанр не найден"));
             book.setAuthor(author);
             book.setGenre(genre);
 
             bookRepository.save(book);
+            ioService.outStringn(String.format("Book updated with id:%s", id));
 
         } catch (ObjectNotFoundException e) {
             ioService.outStringn("Не найден объект в БД с заданным id");

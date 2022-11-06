@@ -7,6 +7,4 @@ public interface InOutService {
 
     String inStringWithPrompt(String prompt);
 
-
-    long inLongWithPrompt(String s);
 }

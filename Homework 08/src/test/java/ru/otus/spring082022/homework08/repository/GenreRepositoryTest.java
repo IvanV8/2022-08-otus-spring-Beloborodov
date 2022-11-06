@@ -1,56 +1,26 @@
 package ru.otus.spring082022.homework08.repository;
 
+import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import ru.otus.spring082022.homework08.domain.Genre;
 import ru.otus.spring082022.homework08.repositories.GenreRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("AuthorRepository  should ")
+class GenreRepositoryTest extends AbstractRepositoryTest {
 
-@DisplayName("Repo для работы с genre")
-@DataJpaTest
-
-
-public class GenreRepositoryTest {
-
-
-    private static final long EXISTING_BOOK_GENRE_ID = 1;
-    private static final String EXISTING_BOOK_GENRE_NAME = "Roman";
-
-
+    private static final String EXISTING_BOOK_GENRE_NAME = "Poem";
     @Autowired
-    private GenreRepository repositoryJpa;
+    private GenreRepository genreRepository;
 
-    @Autowired
-    private TestEntityManager em;
-
-    @DisplayName("возвращать ожидаемый жанр по его id")
+    @DisplayName(" содержать элемент с именем Pushkin")
     @Test
-    void shouldReturnExpectedGenreById() {
+    void shouldReturnCorrectAuthorList() {
+        val genres = genreRepository.findAll();
+        assertThat(genres).isNotNull().hasSize(3);
+        assertThat(genres.stream().anyMatch(s -> s.getName().equals(EXISTING_BOOK_GENRE_NAME)));
 
-
-        Optional<Genre> genre = repositoryJpa.findById(EXISTING_BOOK_GENRE_ID);
-        assertThat(genre).isNotEmpty().get()
-                .hasFieldOrPropertyWithValue("name", EXISTING_BOOK_GENRE_NAME);
     }
-
-
-    @DisplayName("возвращать ожидаемый список жанров")
-    @Test
-    void shouldReturnExpectedGenreList() {
-
-        Genre expectedGenre = new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME);
-
-        List<Genre> actualGenreList = repositoryJpa.findAll();
-        assertThat(actualGenreList.stream().anyMatch(s -> s.getName().equals(EXISTING_BOOK_GENRE_NAME)));
-    }
-
-
 }

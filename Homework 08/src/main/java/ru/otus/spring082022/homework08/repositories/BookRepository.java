@@ -1,19 +1,21 @@
 package ru.otus.spring082022.homework08.repositories;
 
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import ru.otus.spring082022.homework08.domain.Book;
 
 import java.util.List;
 import java.util.Optional;
 
 
-
-public interface BookRepository extends CrudRepository<Book, Long> {
+public interface BookRepository extends MongoRepository<Book, String> {
 
     List<Book> findAll();
 
-    Optional<Book> findById(long id);
+
+    @Query("{ '_id' : ?0 }")
+    Optional<Book> findById(String id);
 
     Book save(Book book);
 }

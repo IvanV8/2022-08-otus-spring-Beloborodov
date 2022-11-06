@@ -1,21 +1,25 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:bookdb
+  mongodb:
+    embedded:
+      version: 3.5.5
+  data:
+    mongodb:
+      port: 0
+      database: test
 
 
-  jpa:
-    generate-ddl: false
-  hibernate:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
 
-  shell:
-    interactive:
-      enabled: false
 
-  liquibase:
-    enabled: true
-    contexts: test
-    change-log: classpath:db.changelog/db.changelog-master-test.yaml
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.spring082022.homework08.mongock
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+logging:
+  level:
+    root: ERROR
