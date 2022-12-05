@@ -44,7 +44,6 @@
             padding: 10px;
         }
     </style>
-    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <h1>Books in library</h1>
@@ -57,10 +56,23 @@
         <th>Author</th>
         <th>Genre</th>
         <th>Actions...</th>
-
     </tr>
     </thead>
     <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.isbn}"></td>
+        <td th:text="${book.author.name}"></td>
+        <td th:text="${book.genre.name}"></td>
+        <td>
+            <span class="b-div"><a class="c-button" th:href="@{/book-comments/{id}(id=${book.id})}">Comments</a></span>
+            <span class="b-div"><a class="c-button" th:href="@{/edit-book/{id}(id=${book.id})}">Edit...</a></span>
+            <span class="b-div">
+            <button class="c-button" data-confirm="Are you sure?" th:onclick="'deleteItem(\'' + ${book.id} + '\');'">Delete</button>
+            </span>
+        </td>
+    </tr>
     </tbody>
 </table>
 
@@ -68,28 +80,18 @@
     <div></div>
     <span class="e-span"><button class="c-button" onclick="location.href='/new-book';">Add book..</button></span>
 </div>
-<script>
-    $(function () {
-        $.get('/api/books').done(function (books) {
-            books.forEach(function (book) {
-                $('tbody').append(`
-                    <tr>
-                        <td>${book.id}</td>
-                        <td>${book.title}</td>
-                        <td>${book.isbn}</td>
-                        <td>${book.author.name}</td>
-                        <td>${book.genre.name}</td>
-                        <td>
-                            <span class="b-div"><button class="c-button" onclick="location.href='/book-comments/${book.id}';">Comments</button></span>
-                            <span class="b-div"><button class="c-button" onclick="location.href='/edit-book/${book.id}';">Edit...</button></span>
-                            <span class="b-div"><button class="c-button" onclick=
-                                    "if(confirm('Are you sure?')) {location.href='/delete-book/${book.id}'};">Delete</button></span>
-                        </td>
-                    </tr>
-                `)
-            });
-        })
-    });
-</script>
+
 </body>
+<script>
+    function deleteItem(id) {
+        fetch(`/delete-book/${id}`, {
+            method: 'DELETE'
+        })
+            .catch(error => console.error('Unable to delete book.', error));
+
+        setTimeout(function () {
+            window.location.reload();
+        }, 200);
+    }
+</script>
 </html>
