@@ -2,12 +2,10 @@ package ru.otus.spring082022.homework10.pages;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.otus.spring082022.homework10.domain.Author;
 import ru.otus.spring082022.homework10.domain.Book;
@@ -17,6 +15,7 @@ import ru.otus.spring082022.homework10.dto.CommentDto;
 import ru.otus.spring082022.homework10.service.LibraryService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -26,6 +25,9 @@ public class LibraryPagesController {
 
     @GetMapping("/")
     public String listPage(Model model) {
+        List<Book> books = libraryService.listAllBooks();
+        model.addAttribute("books", books.stream().map(BookDto::toDto)
+                .collect(Collectors.toList()));
         return "library";
     }
 
@@ -71,35 +73,36 @@ public class LibraryPagesController {
                     HttpStatus.NO_CONTENT, "comments not found"
             );
         }
+        List<CommentDto> comments = libraryService.listCommentsByBook(bookId).stream().map(CommentDto::toDto)
+                .collect(Collectors.toList());
+        model.addAttribute("comments", comments);
         model.addAttribute("book", BookDto.toDto(book));
         return "comments";
-
     }
 
-    @GetMapping("/delete-book/{bookId}")
-    public String deleteBook(@PathVariable long bookId, Model model) {
+    @DeleteMapping(value = "/delete-book/{bookId}")
+    public ResponseEntity<Long> deleteBook(@PathVariable long bookId) {
         libraryService.deleteBookById(bookId);
-        return "library";
+        return ResponseEntity.ok(bookId);
     }
 
-    @GetMapping("/delete-comment/{commentId}")
-    public String deleteComment(@PathVariable long commentId, Model model) {
+    @DeleteMapping("/delete-comment/{commentId}")
+    public ResponseEntity<Long> deleteComment(@PathVariable long commentId) {
         long bookId = libraryService.getCommentById(commentId).getBook().getId();
         libraryService.deleteCommentById(commentId);
-        model.addAttribute("book", BookDto.toDto(libraryService.getBookById(bookId)));
-        return "comments";
+        return ResponseEntity.ok(bookId);
     }
 
     @PostMapping("/save-book")
     public String saveBook(@ModelAttribute BookDto book) {
         libraryService.saveBook(BookDto.toDomain(book));
-        return "library";
+        return "redirect:/";
     }
 
     @PostMapping("/save-comment/{bookId}")
     public String saveComment(@PathVariable long bookId, @ModelAttribute CommentDto comment) {
         libraryService.saveComment(CommentDto.toDomain(comment), bookId);
-        return "library";
+        return "redirect:/book-comments/" + bookId;
     }
 
 

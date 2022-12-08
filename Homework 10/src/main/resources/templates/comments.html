@@ -44,7 +44,6 @@
             padding: 10px;
         }
     </style>
-    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <h1 th:text="${book.title}"></h1>
@@ -59,38 +58,38 @@
     </tr>
     </thead>
     <tbody>
+    <tr th:each="comment : ${comments}">
+        <td th:text="${comment.id}"></td>
+        <td th:text="${comment.userName}"></td>
+        <td th:text="${comment.commentDateTime}"></td>
+        <td th:text="${comment.text}">"</td>
+        <td>
+            <span class="b-div"><a class="c-button" th:href="@{/edit-comment/{id}(id=${comment.id})}">Edit...</a></span>
+            <span class="b-div"><button class="c-button"
+                                        th:onclick="'deleteItem(\'' + ${comment.id} + '\');'">Delete</button></span>
+
+        </td>
+    </tr>
     </tbody>
 </table>
 
 <div class="e-span">
     <div></div>
-    <span class="e-span"><button class="c-button" id="newComment">Add comment..</button></span>
+    <span class="e-span"><a class="c-button" id="newComment"
+                            th:href="@{/new-comment/{id}(id=${book.id})}">Add comment..</a></span>
 </div>
+</body>
 <script>
+    function deleteItem(id) {
+        fetch(`/delete-comment/${id}`, {
+            method: 'DELETE'
+        })
+            .catch(error => console.error('Unable to delete comment.', error));
 
-    document.getElementById("newComment").onclick = function () {
-        location.href = "/new-comment/" + [[${book.id}]];
+        setTimeout(function () {
+            window.location.reload();
+        }, 200);
     }
 
-    $(function () {
-        $.get('/api/comments?bookid=' + [[${book.id}]]).done(function (comments) {
-            comments.forEach(function (comment) {
-                $('tbody').append(`
-                    <tr>
-                        <td>${comment.id}</td>
-                        <td>${comment.userName}</td>
-                        <td>${comment.commentDateTime}</td>
-                        <td>${comment.text}</td>
-                        <td>
-                            <span class="b-div"><button class="c-button" onclick="location.href='/edit-comment/${comment.id}';">Edit...</button></span>
-                            <span class="b-div"><button class="c-button" onclick=
-                                    "if(confirm('Are you sure?')) {location.href='/delete-comment/${comment.id}'};">Delete</button></span>
-                        </td>
-                    </tr>
-                `)
-            });
-        })
-    });
 </script>
-</body>
 </html>
