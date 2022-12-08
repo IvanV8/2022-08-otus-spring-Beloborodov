@@ -1,0 +1,50 @@
+html, body, .root {
+  height: 100%;
+}
+body {
+  line-height: 1.5;
+}
+body, .app {
+  background: white;
+}
+
+/* main page */
+
+body {
+  padding: 50px;
+}
+
+.books {
+  border: 1px solid steelblue;
+  width: 1000px;
+  border-collapse: collapse;
+  margin-bottom: 5px;
+}
+
+.books tr td, th {
+  padding: 5px;
+  border: 1px solid steelblue;
+  width: auto;
+}
+
+.c-button {
+  appearance: none;
+  border: 0;
+  border-radius: 5px;
+  background: #4676D7;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 12px;
+  margin-bottom: 2px;
+  margin-left: 2px;
+}
+
+.b-div {
+  margin-bottom: 2px;
+  margin-left: 2px;
+}
+
+.e-span {
+  margin-top: 10px;
+  padding: 10px;
+}
