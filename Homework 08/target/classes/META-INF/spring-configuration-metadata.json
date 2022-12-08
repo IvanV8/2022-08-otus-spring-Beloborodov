@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "spring.data.mongodb",
+      "type": "ru.otus.spring082022.homework08.config.MongoProps",
+      "sourceType": "ru.otus.spring082022.homework08.config.MongoProps"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.data.mongodb.database",
+      "type": "java.lang.String",
+      "sourceType": "ru.otus.spring082022.homework08.config.MongoProps"
+    },
+    {
+      "name": "spring.data.mongodb.port",
+      "type": "java.lang.Integer",
+      "sourceType": "ru.otus.spring082022.homework08.config.MongoProps"
+    },
+    {
+      "name": "spring.data.mongodb.uri",
+      "type": "java.lang.String",
+      "sourceType": "ru.otus.spring082022.homework08.config.MongoProps"
+    }
+  ],
+  "hints": []
+}
