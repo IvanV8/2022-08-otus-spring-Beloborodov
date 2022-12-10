@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Library</title>
+
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            width: 1000px;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+            width: auto;
+        }
+
+
+        .c-button {
+            appearance: none;
+            border: 0;
+            border-radius: 5px;
+            background: #4676D7;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-bottom: 2px;
+            margin-left: 2px;
+
+        .b-div {
+            margin-bottom: 2px;
+            margin-left: 2px;
+        }
+
+        .e-span {
+            margin-top: 10px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Books in library</h1>
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>ISBN</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Actions...</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.isbn}"></td>
+        <td th:text="${book.author.name}"></td>
+        <td th:text="${book.genre.name}"></td>
+        <td>
+            <span class="b-div"><a class="c-button" th:href="@{/book-comments/{id}(id=${book.id})}">Comments</a></span>
+            <span class="b-div"><a class="c-button" th:href="@{/edit-book/{id}(id=${book.id})}">Edit...</a></span>
+            <span class="b-div">
+            <button class="c-button" data-confirm="Are you sure?" th:onclick="'deleteItem(\'' + ${book.id} + '\');'">Delete</button>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="e-span">
+    <div></div>
+    <span class="e-span"><button class="c-button" onclick="location.href='/new-book';">Add book..</button></span>
+</div>
+
+</body>
+<script>
+    function deleteItem(id) {
+        fetch(`/delete-book/${id}`, {
+            method: 'DELETE'
+        })
+            .catch(error => console.error('Unable to delete book.', error));
+
+        setTimeout(function () {
+            window.location.reload();
+        }, 200);
+    }
+</script>
+</html>
