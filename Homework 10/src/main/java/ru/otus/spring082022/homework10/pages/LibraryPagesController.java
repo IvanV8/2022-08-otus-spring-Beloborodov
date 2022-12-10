@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.otus.spring082022.homework10.domain.Author;
 import ru.otus.spring082022.homework10.domain.Book;
+import ru.otus.spring082022.homework10.domain.Comment;
 import ru.otus.spring082022.homework10.domain.Genre;
 import ru.otus.spring082022.homework10.dto.BookDto;
 import ru.otus.spring082022.homework10.dto.CommentDto;
@@ -16,6 +17,8 @@ import ru.otus.spring082022.homework10.service.LibraryService;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 @AllArgsConstructor
@@ -45,6 +48,8 @@ public class LibraryPagesController {
     public String editBook(@PathVariable long bookId, Model model) {
         List<Author> authors = libraryService.listAllAuthors();
         List<Genre> genres = libraryService.listAllGenres();
+        Book book = libraryService.getBookById(bookId);
+        if (book == null) throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
         model.addAttribute("book", BookDto.toDto(libraryService.getBookById(bookId)));
         model.addAttribute("authors", authors);
         model.addAttribute("genres", genres);
@@ -88,7 +93,9 @@ public class LibraryPagesController {
 
     @DeleteMapping("/delete-comment/{commentId}")
     public ResponseEntity<Long> deleteComment(@PathVariable long commentId) {
-        long bookId = libraryService.getCommentById(commentId).getBook().getId();
+        Comment comment = libraryService.getCommentById(commentId);
+        if (comment == null) throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
+        long bookId = comment.getBook().getId();
         libraryService.deleteCommentById(commentId);
         return ResponseEntity.ok(bookId);
     }
