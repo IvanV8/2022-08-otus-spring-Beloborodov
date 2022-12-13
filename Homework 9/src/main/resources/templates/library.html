@@ -68,9 +68,10 @@
         <td>
             <span class="b-div"><a class="c-button" th:href="@{/book-comments/{id}(id=${book.id})}">Comments</a></span>
             <span class="b-div"><a class="c-button" th:href="@{/edit-book/{id}(id=${book.id})}">Edit...</a></span>
-            <span class="b-div">
-            <button class="c-button" data-confirm="Are you sure?" th:onclick="'deleteItem(\'' + ${book.id} + '\');'">Delete</button>
-            </span>
+            <form action="#" th:action="@{'/delete-book/' + ${book.id}}" th:method="delete">
+                <input name="_method" type="hidden" value="delete"/>
+                <span class="b-div"><button class="c-button" type="submit"> Delete</button></span>
+            </form>
         </td>
     </tr>
     </tbody>
@@ -82,16 +83,5 @@
 </div>
 
 </body>
-<script>
-    function deleteItem(id) {
-        fetch(`/delete-book/${id}`, {
-            method: 'DELETE'
-        })
-            .catch(error => console.error('Unable to delete book.', error));
 
-        setTimeout(function () {
-            window.location.reload();
-        }, 200);
-    }
-</script>
 </html>

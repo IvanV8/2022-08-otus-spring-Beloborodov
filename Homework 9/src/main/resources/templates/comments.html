@@ -65,9 +65,10 @@
         <td th:text="${comment.text}">"</td>
         <td>
             <span class="b-div"><a class="c-button" th:href="@{/edit-comment/{id}(id=${comment.id})}">Edit...</a></span>
-            <span class="b-div"><button class="c-button"
-                                        th:onclick="'deleteItem(\'' + ${comment.id} + '\');'">Delete</button></span>
-
+            <form th:action="@{/delete-comment/{id}(id=${comment.id})}" th:method="delete" th:object="${comment}">
+                <input name="_method" type="hidden" value="delete"/>
+                <span class="b-div"><button class="c-button" type="submit">Delete</button></span>
+            </form>
         </td>
     </tr>
     </tbody>
@@ -79,17 +80,5 @@
                             th:href="@{/new-comment/{id}(id=${book.id})}">Add comment..</a></span>
 </div>
 </body>
-<script>
-    function deleteItem(id) {
-        fetch(`/delete-comment/${id}`, {
-            method: 'DELETE'
-        })
-            .catch(error => console.error('Unable to delete comment.', error));
 
-        setTimeout(function () {
-            window.location.reload();
-        }, 200);
-    }
-
-</script>
 </html>

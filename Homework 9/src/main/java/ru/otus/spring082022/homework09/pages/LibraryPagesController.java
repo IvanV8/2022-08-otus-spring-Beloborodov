@@ -2,10 +2,12 @@ package ru.otus.spring082022.homework09.pages;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
 import ru.otus.spring082022.homework09.domain.Author;
 import ru.otus.spring082022.homework09.domain.Book;
@@ -49,7 +51,9 @@ public class LibraryPagesController {
         List<Author> authors = libraryService.listAllAuthors();
         List<Genre> genres = libraryService.listAllGenres();
         Book book = libraryService.getBookById(bookId);
-        if (book == null) throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
+        if (book == null) {
+            throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
+        }
         model.addAttribute("book", BookDto.toDto(libraryService.getBookById(bookId)));
         model.addAttribute("authors", authors);
         model.addAttribute("genres", genres);
@@ -85,19 +89,21 @@ public class LibraryPagesController {
         return "comments";
     }
 
-    @DeleteMapping(value = "/delete-book/{bookId}")
-    public ResponseEntity<Long> deleteBook(@PathVariable long bookId) {
+    @PostMapping("/delete-book/{bookId}")
+    public String deleteBook(@PathVariable long bookId) {
         libraryService.deleteBookById(bookId);
-        return ResponseEntity.ok(bookId);
+        return "redirect:/";
     }
 
-    @DeleteMapping("/delete-comment/{commentId}")
-    public ResponseEntity<Long> deleteComment(@PathVariable long commentId) {
+    @PostMapping("/delete-comment/{commentId}")
+    public String deleteComment(@PathVariable long commentId) {
         Comment comment = libraryService.getCommentById(commentId);
-        if (comment == null) throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
+        if (comment == null) {
+            throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
+        }
         long bookId = comment.getBook().getId();
         libraryService.deleteCommentById(commentId);
-        return ResponseEntity.ok(bookId);
+        return "redirect:/";
     }
 
     @PostMapping("/save-book")

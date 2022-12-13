@@ -1,4 +1,4 @@
-package ru.otus.spring082022.homework10.pages;
+package ru.otus.spring082022.homework09.pages;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,14 +18,14 @@ import ru.otus.spring082022.homework09.domain.Comment;
 import ru.otus.spring082022.homework09.domain.Genre;
 import ru.otus.spring082022.homework09.dto.BookDto;
 import ru.otus.spring082022.homework09.dto.CommentDto;
-import ru.otus.spring082022.homework09.pages.LibraryPagesController;
 import ru.otus.spring082022.homework09.service.LibraryService;
 
 import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -91,7 +91,7 @@ public class LibraryPagesControllerTest {
     }
 
     @Test
-    @DisplayName("API сохраняет книгу")
+    @DisplayName("Сохранить книгу")
     public void shouldSaveBook() throws Exception {
         BookDto book = new BookDto(-1, "Title", "ISBN",
                 new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
@@ -104,16 +104,16 @@ public class LibraryPagesControllerTest {
     }
 
     @Test
-    @DisplayName("API удаляет книгу")
+    @DisplayName("Удалить  книгу")
     public void shouldDeleteBook() throws Exception {
         mockMvc.perform(
-                        delete("/delete-book/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                        post("/delete-book/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(302));
 
     }
 
     @Test
-    @DisplayName("API сохраняет коммент")
+    @DisplayName("Сохранить коммент")
     public void shouldSaveComment() throws Exception {
 
         CommentDto comment = new CommentDto(-1, "user", LocalDateTime.now(), "comment", 1);
@@ -150,14 +150,14 @@ public class LibraryPagesControllerTest {
     }
 
     @Test
-    @DisplayName("API удаляет коммент")
+    @DisplayName("Удалить коммент")
     public void shouldDeleteComment() throws Exception {
 
         when(libraryService.getCommentById(EXISTING_ID)).thenReturn(comment);
 
         mockMvc.perform(
-                        delete("/delete-comment/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                        post("/delete-comment/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(302));
 
     }
 }

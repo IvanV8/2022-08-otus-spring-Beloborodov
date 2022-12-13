@@ -1,4 +1,4 @@
-package ru.otus.spring082022.homework10.repository;
+package ru.otus.spring082022.homework09.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
