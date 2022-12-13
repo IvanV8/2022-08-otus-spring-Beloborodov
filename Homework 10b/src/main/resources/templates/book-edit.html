@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Edit book in Library</title>
@@ -43,36 +43,30 @@
 <div class="container my-3">
     <div class="row">
         <div class="col-md-8 mx-auto">
-            <h2>Edit book</h2>
-            <form method="post" th:action="@{/save-book}" th:object="${book}">
+            <form action="/api/books/" method="post" onsubmit="return onSubmit(this);">
+                <h2>Edit book</h2>
                 <div class="form-row">
                     <div class="col-md-6 form-group">
                         <label>Book ID</label>
-                        <input class="form-control" readonly="true" th:field="*{id}" type="number">
+                        <input class="form-control" id="id" name="id" readonly="true" type="number">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Title</label>
-                        <input class="form-control" th:field="*{title}" type="text">
+                        <input class="form-control" id="title" name="title" type="text">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>ISBN</label>
-                        <input class="form-control" th:field="*{isbn}" type="text">
+                        <input class="form-control" id="isbn" name="isbn" type="text">
                     </div>
 
                     <div class="col-md-6 form-group">
                         <label for="author">Author:</label>
-                        <select id="author" th:field="*{author}">
-                            <option th:each="author : ${authors}"
-                                    th:text="${author.name}"
-                                    th:value="${author.id}">
+                        <select id="author">
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
                         <label for="genre">Genre:</label>
-                        <select id="genre" th:field="*{genre}">
-                            <option th:each="genre : ${genres}"
-                                    th:text="${genre.name}"
-                                    th:value="${genre.id}">
+                        <select id="genre">
                         </select>
                     </div>
                 </div>
@@ -81,5 +75,49 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+
+        var $select_authors = $('#author');
+        $.get('/api/authors/').done(function (authors) {
+            authors.forEach(function (author) {
+                var option = $('<option value="' + author.id + '">' + author.name + '</option>');
+                $select_authors.append(option);
+            });
+        });
+
+        var $select_genres = $('#genre');
+        $.get('/api/genres/').done(function (genres) {
+            genres.forEach(function (genre) {
+                var option = $('<option value="' + genre.id + '">' + genre.name + '</option>');
+                $select_genres.append(option);
+            });
+        });
+        $.get('/api/books/' + [[${bookId}]]).done(function (book) {
+                $("#id").val(book.id);
+                $("#title").val(book.title);
+                $("#isbn").val(book.isbn);
+                $('#author').val(book.author.id).change();
+                $('#genre').val(book.genre.id).change();
+            }
+        );
+        $("#submitBtn").click(function () {
+            var title = $("#title").val();
+            var isbn = $("#isbn").val();
+
+        });
+    });
+</script>
+<script>
+    function onSubmit(form) {
+        var data = JSON.stringify($(form).serializeArray());
+        $.post({
+            url: '/api/books/',
+            data: data,
+            contentType: 'application/json; charset=utf-8'
+        });
+    }
+</script>
 </body>
 </html>

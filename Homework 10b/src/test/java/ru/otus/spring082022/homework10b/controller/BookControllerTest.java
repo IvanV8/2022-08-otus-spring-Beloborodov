@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @ContextConfiguration(classes = Homework10bApplication.class)
-@WebMvcTest(controllers = LibraryController.class)
-public class LibraryControllerTest {
+@WebMvcTest(controllers = BookController.class)
+public class BookControllerTest {
 
     private static final long EXISTING_ID = 1L;
 

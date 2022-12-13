@@ -17,6 +17,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             type = org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.LOAD)
     List<Book> findAll();
 
+    @EntityGraph(value = "book-author-genre-graph",
+            type = org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.LOAD)
     Optional<Book> findById(long id);
 
     @Override

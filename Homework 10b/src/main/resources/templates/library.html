@@ -72,7 +72,7 @@
     $(function () {
         $.get('/api/books').done(function (books) {
             books.forEach(function (book) {
-                $('tbody').append(`
+            $('tbody').append(`
                     <tr>
                         <td>${book.id}</td>
                         <td>${book.title}</td>
@@ -92,16 +92,16 @@
         })
     });
 </script>
+
 <script>
     function deleteItem(id) {
-        fetch(`/api/delete-book/${id}`, {
+        fetch(`/api/books/${id}`, {
             method: 'DELETE'
         })
-            .catch(error => console.error('Unable to delete book.', error));
-
-        setTimeout(function () {
-            window.location.reload();
-        }, 200);
+            .catch(error => console.error('Unable to delete book.', error))
+            .then(() => {
+                window.location.reload();
+            });
     }
 </script>
 </body>

@@ -11,7 +11,7 @@ public interface LibraryService {
 
     List<Book> listAllBooks();
 
-    void saveComment(Comment comment, long bookId);
+    void saveComment(Comment comment);
 
     Book getBookById(long id);
 

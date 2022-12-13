@@ -1,17 +1,11 @@
 package ru.otus.spring082022.homework10b.pages;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.server.ResponseStatusException;
-import ru.otus.spring082022.homework10b.domain.Author;
 import ru.otus.spring082022.homework10b.domain.Book;
-import ru.otus.spring082022.homework10b.domain.Genre;
 import ru.otus.spring082022.homework10b.dto.BookDto;
 import ru.otus.spring082022.homework10b.dto.CommentDto;
 import ru.otus.spring082022.homework10b.service.LibraryService;
@@ -35,27 +29,18 @@ public class LibraryPagesController {
 
     @GetMapping("/new-book")
     public String newBook(Model model) {
-        List<Author> authors = libraryService.listAllAuthors();
-        List<Genre> genres = libraryService.listAllGenres();
-        model.addAttribute("book", new BookDto());
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
         return "book-edit";
     }
 
     @GetMapping("/edit-book/{bookId}")
     public String editBook(@PathVariable long bookId, Model model) {
-        List<Author> authors = libraryService.listAllAuthors();
-        List<Genre> genres = libraryService.listAllGenres();
-        model.addAttribute("book", BookDto.toDto(libraryService.getBookById(bookId)));
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
+        model.addAttribute("bookId", bookId);
         return "book-edit";
     }
 
     @GetMapping("/edit-comment/{commentId}")
     public String editComment(@PathVariable long commentId, Model model) {
-        model.addAttribute("comment", CommentDto.toDto(libraryService.getCommentById(commentId)));
+        model.addAttribute("commentId", commentId);
         return "comment-edit";
     }
 
@@ -69,30 +54,10 @@ public class LibraryPagesController {
 
     @GetMapping("/book-comments/{bookId}")
     public String commentsByBook(@PathVariable long bookId, Model model) {
-        Book book = libraryService.getBookById(bookId);
-        if (book == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NO_CONTENT, "comments not found"
-            );
-        }
-        List<CommentDto> comments = libraryService.listCommentsByBook(bookId).stream().map(CommentDto::toDto)
-                .collect(Collectors.toList());
-        model.addAttribute("comments", comments);
-        model.addAttribute("book", BookDto.toDto(book));
+        model.addAttribute("bookId", bookId);
         return "comments";
     }
 
-    @PostMapping("/save-book")
-    public String saveBook(@ModelAttribute BookDto book) {
-        libraryService.saveBook(BookDto.toDomain(book));
-        return "redirect:/";
-    }
-
-    @PostMapping("/save-comment/{bookId}")
-    public String saveComment(@PathVariable long bookId, @ModelAttribute CommentDto comment) {
-        libraryService.saveComment(CommentDto.toDomain(comment), bookId);
-        return "redirect:/book-comments/" + bookId;
-    }
 
 
 }

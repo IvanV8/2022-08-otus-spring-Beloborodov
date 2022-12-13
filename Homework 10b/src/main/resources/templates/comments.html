@@ -47,7 +47,7 @@
     <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<h1 th:text="${book.title}"></h1>
+<h1 Comments></h1>
 <table class="books">
     <thead>
     <tr>
@@ -69,11 +69,11 @@
 <script>
 
     document.getElementById("newComment").onclick = function () {
-        location.href = "/new-comment/" + [[${book.id}]];
+        location.href = "/new-comment/" + [[${bookId}]];
     }
 
     $(function () {
-        $.get('/api/comments?bookid=' + [[${book.id}]]).done(function (comments) {
+        $.get('/api/comments/bybook/' + [[${bookId}]]).done(function (comments) {
             comments.forEach(function (comment) {
                 $('tbody').append(`
                     <tr>
@@ -95,14 +95,14 @@
 </script>
 <script>
     function deleteItem(id) {
-        fetch(`/api/delete-comment/${id}`, {
+        fetch(`/api/comments/${id}`, {
             method: 'DELETE'
         })
-            .catch(error => console.error('Unable to delete comment.', error));
+            .catch(error => console.error('Unable to delete comment.', error))
+            .then(() => {
+                window.location.reload();
+            });
 
-        setTimeout(function () {
-            window.location.reload();
-        }, 200);
     }
 
 </script>
