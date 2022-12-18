@@ -19,7 +19,7 @@ public class CommentsController {
     private final LibraryService libraryService;
 
     @GetMapping("/api/comments/bybook/{bookId}")
-    public ResponseEntity<?> getCommentsByBook(@PathVariable long bookId) {
+    public ResponseEntity<List<CommentDto>> getCommentsByBook(@PathVariable long bookId) {
         try {
             List<Comment> comments = libraryService.listCommentsByBook(bookId);
             if (comments == null) throw new ObjectNotFoundException("No comments found");
@@ -33,11 +33,11 @@ public class CommentsController {
     }
 
     @GetMapping("/api/comments/{commentId}")
-    public ResponseEntity<?> getComment(@PathVariable long commentId) {
+    public ResponseEntity<CommentDto> getComment(@PathVariable long commentId) {
         try {
             Comment comment = libraryService.getCommentById(commentId);
             if (comment == null) throw new ObjectNotFoundException("No comment with id");
-            return new ResponseEntity<>(comment, HttpStatus.OK);
+            return new ResponseEntity<CommentDto>(CommentDto.toDto(comment), HttpStatus.OK);
         } catch (ObjectNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -46,7 +46,7 @@ public class CommentsController {
     }
 
     @PostMapping("/api/comments/")
-    public ResponseEntity<?> saveComment(@RequestBody CommentDto comment) {
+    public ResponseEntity<CommentDto> saveComment(@RequestBody CommentDto comment) {
         try {
             libraryService.saveComment(CommentDto.toDomain(comment));
             return new ResponseEntity<>(comment, HttpStatus.OK);

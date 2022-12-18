@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.otus.spring082022.homework10b.domain.Book;
 import ru.otus.spring082022.homework10b.dto.BookDto;
-import ru.otus.spring082022.homework10b.dto.CommentDto;
 import ru.otus.spring082022.homework10b.service.LibraryService;
 
 import java.util.List;
@@ -29,6 +28,7 @@ public class LibraryPagesController {
 
     @GetMapping("/new-book")
     public String newBook(Model model) {
+        model.addAttribute("bookId", -1);
         return "book-edit";
     }
 
@@ -41,14 +41,14 @@ public class LibraryPagesController {
     @GetMapping("/edit-comment/{commentId}")
     public String editComment(@PathVariable long commentId, Model model) {
         model.addAttribute("commentId", commentId);
+        model.addAttribute("bookId", 0);
         return "comment-edit";
     }
 
     @GetMapping("/new-comment/{bookId}")
     public String newComment(@PathVariable long bookId, Model model) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setBookId(bookId);
-        model.addAttribute("comment", commentDto);
+        model.addAttribute("commentId", -1);
+        model.addAttribute("bookId", bookId);
         return "comment-edit";
     }
 

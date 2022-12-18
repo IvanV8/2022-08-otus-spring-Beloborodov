@@ -43,7 +43,6 @@
 <div class="container my-3">
     <div class="row">
         <div class="col-md-8 mx-auto">
-            <form action="/api/books/" method="post" onsubmit="return onSubmit(this);">
                 <h2>Edit book</h2>
                 <div class="form-row">
                     <div class="col-md-6 form-group">
@@ -70,15 +69,13 @@
                         </select>
                     </div>
                 </div>
-                <button class="btn btn-primary btn-block mt-3" type="submit">Save Book</button>
-            </form>
+                <button class="btn btn-primary btn-block mt-3" onclick="onSubmit()">Save Book</button>
         </div>
     </div>
 </div>
 
 <script>
     $(function () {
-
         var $select_authors = $('#author');
         $.get('/api/authors/').done(function (authors) {
             authors.forEach(function (author) {
@@ -86,7 +83,6 @@
                 $select_authors.append(option);
             });
         });
-
         var $select_genres = $('#genre');
         $.get('/api/genres/').done(function (genres) {
             genres.forEach(function (genre) {
@@ -102,21 +98,28 @@
                 $('#genre').val(book.genre.id).change();
             }
         );
-        $("#submitBtn").click(function () {
-            var title = $("#title").val();
-            var isbn = $("#isbn").val();
 
-        });
     });
 </script>
 <script>
-    function onSubmit(form) {
-        var data = JSON.stringify($(form).serializeArray());
+    function onSubmit() {
+        var data_json = JSON.stringify({
+            "id": $("#id").val(),
+            "title": $("#title").val(),
+            "isbn": $("#isbn").val(),
+            "author": {
+                "id": $("#author").val()
+            },
+            "genre": {
+                "id": $("#genre").val()
+            }
+        });
         $.post({
             url: '/api/books/',
-            data: data,
+            data: data_json,
             contentType: 'application/json; charset=utf-8'
         });
+        window.location.href = "/";
     }
 </script>
 </body>
