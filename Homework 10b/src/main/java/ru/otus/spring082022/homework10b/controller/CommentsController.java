@@ -57,9 +57,8 @@ public class CommentsController {
 
     @DeleteMapping("/api/comments/{commentId}")
     public ResponseEntity<Long> deleteComment(@PathVariable long commentId) {
-        long bookId = libraryService.getCommentById(commentId).getBook().getId();
         libraryService.deleteCommentById(commentId);
-        return ResponseEntity.ok(bookId);
+        return ResponseEntity.ok(commentId);
     }
 }
 

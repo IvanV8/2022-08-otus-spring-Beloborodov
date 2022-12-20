@@ -16,7 +16,6 @@ import ru.otus.spring082022.homework10b.domain.Author;
 import ru.otus.spring082022.homework10b.domain.Book;
 import ru.otus.spring082022.homework10b.domain.Comment;
 import ru.otus.spring082022.homework10b.domain.Genre;
-import ru.otus.spring082022.homework10b.dto.BookDto;
 import ru.otus.spring082022.homework10b.service.LibraryService;
 
 import java.time.LocalDateTime;
@@ -29,8 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ContextConfiguration(classes = Homework10bApplication.class)
-@WebMvcTest(controllers = BookController.class)
-public class BookControllerTest {
+@WebMvcTest(controllers = CommentsController.class)
+public class CommentControllerTest {
 
     private static final long EXISTING_ID = 1L;
     private static final long EXISTING_BOOK_AUTHOR_ID = 1;
@@ -38,6 +37,8 @@ public class BookControllerTest {
     private static final String EXISTING_BOOK_TITLE = "Evgeny Onegin";
     private static final long EXISTING_BOOK_GENRE_ID = 1;
     private static final String EXISTING_BOOK_GENRE_NAME = "Roman";
+
+    private static final String EXISTING_COMMENT_USER = "Yablokov";
     private static Book book;
     private static Comment comment;
     @Autowired
@@ -52,47 +53,39 @@ public class BookControllerTest {
         book = new Book(-1, EXISTING_BOOK_TITLE, "ISBN",
                 new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
                 new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME));
-        comment = new Comment(-1, "user", LocalDateTime.now(), "comment", book);
+        comment = new Comment(-1, EXISTING_COMMENT_USER, LocalDateTime.now(), "comment", book);
     }
 
 
     @Test
-    @DisplayName("API возвращает список книг")
-    public void shouldReturnBooksJson() throws Exception {
+    @DisplayName("API возвращает список комментов")
+    public void shouldReturnCommentsJson() throws Exception {
 
-        mockMvc.perform(get("/api/books").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
 
-        List<Book> books = new ArrayList<>();
-        books.add(book);
-        when(libraryService.listAllBooks()).thenReturn(books);
+        List<Comment> comments = new ArrayList<>();
+        comments.add(comment);
+        when(libraryService.listCommentsByBook(EXISTING_ID)).thenReturn(comments);
 
-        mockMvc.perform(get("/api/books"))
+        mockMvc.perform(get("/api/comments/bybook/" + EXISTING_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].title", is(EXISTING_BOOK_TITLE)))
+                .andExpect(jsonPath("$[0].userName", is(EXISTING_COMMENT_USER)))
                 .andExpect(status().isOk());
 
     }
 
     @Test
-    @DisplayName("API удаляет книгу")
-    public void shouldDeleteBook() throws Exception {
-        mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(book)));
-        mockMvc.perform(delete("/api/books/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON))
+    @DisplayName("API удаляет коммент")
+    public void shouldDeleteComment() throws Exception {
+        mockMvc.perform(delete("/api/comments/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("Сохранить книгу")
-    public void shouldSaveBook() throws Exception {
-        BookDto book = new BookDto(-1, "Title", "ISBN",
-                new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
-                new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME));
-
-        mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(book)))
+    @DisplayName("API сохраняет коммент")
+    public void shouldSaveComment() throws Exception {
+        mockMvc.perform(post("/api/comments/").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(comment)))
                 .andExpect(status().is(200));
     }
 
