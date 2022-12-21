@@ -100,10 +100,10 @@ public class LibraryServiceImpl implements LibraryService {
 
     @Override
     @Transactional
-    public void saveComment(Comment comment, long bookId) {
+    public void saveComment(Comment comment) {
         try {
-            Book book = bookRepository.findById(bookId)
-                    .orElseThrow(() -> new ObjectNotFoundException(String.format("No book with id:%d", bookId)));
+            Book book = bookRepository.findById(comment.getBook().getId())
+                    .orElseThrow(() -> new ObjectNotFoundException(String.format("No book with id")));
             comment.setCommentDateTime(LocalDateTime.now());
             comment.setBook(book);
             commentRepository.save(comment);

@@ -36,4 +36,7 @@ public class Book {
     @JoinColumn(name = "genre_id", referencedColumnName = "id")
     private Genre genre;
 
+    public Book(long bookId) {
+        this.id = bookId;
+    }
 }

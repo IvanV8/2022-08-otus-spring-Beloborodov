@@ -34,10 +34,6 @@ public class ApplicationShellCommands {
         }
     }
 
-
-
-
-
     @ShellMethod(value = "Authors", key = {"a", "authors"}, group = "Books")
     public void listAuthors() {
         List<Author> authors = bookService.listAllAuthors();
@@ -65,21 +61,63 @@ public class ApplicationShellCommands {
 
     @ShellMethod(value = "New", key = {"n", "new"}, group = "Books")
     public void newBook() {
-
-        ioService.outStringn(String.format("New book added with id:%d", bookService.newBook()));
+        ioService.inStringWithPrompt("");
+        String title = ioService.inStringWithPrompt("Enter TITLE:");
+        String isbn = ioService.inStringWithPrompt("Enter ISBN:");
+        long authorId = ioService.inLongWithPrompt("Enter author id:");
+        long genreId = ioService.inLongWithPrompt("Enter genre id:");
+        ioService.outStringn(String.format("New book added with id:%d",
+                bookService.newBook(title, isbn, authorId, genreId)));
     }
 
     @ShellMethod(value = "Comment", key = {"c", "comment"}, group = "Books")
     public void newComment() {
+        long bookId = ioService.inLongWithPrompt("Enter book ID:");
+        ioService.inStringWithPrompt("");
+        String userName = ioService.inStringWithPrompt("Enter your name:");
+        String textComment = ioService.inStringWithPrompt("Enter your comment:");
+        ioService.outStringn(String.format("New comment added with id:%d",
+                bookService.newComment(bookId, userName, textComment)));
+    }
 
-        ioService.outStringn(String.format("New comment added with id:%d", bookService.newComment()));
+    @ShellMethod(value = "Edit Comment", key = {"ec", "edit comment"}, group = "Books")
+    public void editComment() {
+        long commentId = ioService.inLongWithPrompt("Enter comment ID:");
+        ioService.inStringWithPrompt(""); // т.к. чтение числа
+        String userName = ioService.inStringWithPrompt("Enter your name:");
+        String textComment = ioService.inStringWithPrompt("Enter your comment:");
+        ioService.outStringn(String.format("Comment updated with id:%d",
+                bookService.updateComment(commentId, userName, textComment).getId()));
     }
 
     @ShellMethod(value = "Edit", key = {"e", "edit"}, group = "Books")
     public String editBook(@ShellOption(help = "Enter id", defaultValue = "0") long id) {
         if (id == 0)
             id = ioService.inLongWithPrompt("Enter ID:");
-        bookService.updateBook(id);
+        Book book = bookService.getBookById(id);
+        // если пользователь ввел пустую строку, то не меняем поле объекта
+        ioService.inStringWithPrompt(""); // т.к. первая  строка пропускается
+        String title = ioService.inStringWithPrompt(String.format("Enter new TITLE (Enter to leave:%s):", book.getTitle()));
+        if (title.equals("")) {
+            title = book.getTitle();
+        } else book.setTitle(title);
+        // если пользователь ввел пустую строку, то не меняем поле объекта
+        String isbn = ioService.inStringWithPrompt(String.format("Enter new ISBN (Enter to leave:%s):", book.getIsbn()));
+        if (isbn.equals("")) {
+            isbn = book.getIsbn();
+        } else book.setIsbn(isbn);
+        // если пользователь ввел 0, то не меняем поле объекта
+        long authorId = ioService.inLongWithPrompt(String.format("Enter new AUTHOR ID (Enter 0 to leave:%d):", book.getAuthor().getId()));
+        if (authorId == 0) {
+            authorId = book.getAuthor().getId();
+        }
+        // если пользователь ввел 0, то не меняем поле объекта
+        long genreId = ioService.inLongWithPrompt(String.format("Enter new GENRE ID (Enter 0 to leave:%d):", book.getGenre().getId()));
+        if (genreId == 0) {
+            genreId = book.getGenre().getId();
+        }
+
+        bookService.updateBook(id, title, isbn, authorId, genreId);
         return String.format("Book updated with id:%d", id);
     }
 

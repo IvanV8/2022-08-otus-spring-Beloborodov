@@ -3,6 +3,7 @@ package ru.otus.spring082022.homework10b.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.otus.spring082022.homework10b.domain.Book;
 import ru.otus.spring082022.homework10b.domain.Comment;
 
 import java.time.LocalDateTime;
@@ -29,6 +30,6 @@ public class CommentDto {
         return new Comment(commentDto.getId(),
                 commentDto.getUserName(),
                 commentDto.getCommentDateTime(),
-                commentDto.getText(), null);
+                commentDto.getText(), new Book(commentDto.bookId));
     }
 }

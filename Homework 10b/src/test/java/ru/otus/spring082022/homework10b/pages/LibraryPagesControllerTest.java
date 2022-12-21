@@ -1,71 +1,75 @@
 package ru.otus.spring082022.homework10b.pages;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.spring082022.homework10b.Homework10bApplication;
-import ru.otus.spring082022.homework10b.domain.Author;
-import ru.otus.spring082022.homework10b.domain.Genre;
-import ru.otus.spring082022.homework10b.dto.BookDto;
-import ru.otus.spring082022.homework10b.dto.CommentDto;
 import ru.otus.spring082022.homework10b.service.LibraryService;
 
-import java.time.LocalDateTime;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
 @ContextConfiguration(classes = Homework10bApplication.class)
 @WebMvcTest(controllers = LibraryPagesController.class)
+
 public class LibraryPagesControllerTest {
 
     private static final long EXISTING_ID = 1L;
-    private static final long EXISTING_BOOK_AUTHOR_ID = 1;
-    private static final String EXISTING_BOOK_AUTHOR_NAME = "Alexander Pushkin";
-    private static final long EXISTING_BOOK_GENRE_ID = 1;
-    private static final String EXISTING_BOOK_GENRE_NAME = "Roman";
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockBean
     private LibraryService libraryService;
 
     @Test
-    @DisplayName("API сохраняет книгу")
-    public void shouldSaveBook() throws Exception {
-        BookDto book = new BookDto(-1, "Title", "ISBN",
-                new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
-                new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME));
+    @DisplayName("Получить страницу с книгами")
+    public void shouldReturnLibraryPage() throws Exception {
 
-        mockMvc.perform(
-                        post("/save-book").contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(book)))
-                .andExpect(status().is(302));
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Получить страницу с редактированием новой книги")
+    public void shouldReturnNewBookPage() throws Exception {
+
+        mockMvc.perform(get("/new-book"))
+                .andExpect(view().name("book-edit"))
+                .andExpect(status().isOk());
 
     }
 
     @Test
-    @DisplayName("API сохраняет коммент")
-    public void shouldSaveComment() throws Exception {
+    @DisplayName("Получить страницу с редактированием  книги")
+    public void shouldReturnEditBookPage() throws Exception {
 
-        CommentDto comment = new CommentDto(-1, "user", LocalDateTime.now(), "comment", 1);
+        mockMvc.perform(get("/edit-book/" + EXISTING_ID))
+                .andExpect(view().name("book-edit"))
+                .andExpect(status().isOk());
+    }
 
-        mockMvc.perform(
-                        post("/save-comment/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(comment)))
-                .andExpect(status().is(302));
 
+    @Test
+    @DisplayName("Получить страницу с редактированием  коммента")
+    public void shouldReturnEditCommentPage() throws Exception {
+        mockMvc.perform(get("/edit-comment/" + EXISTING_ID))
+                .andExpect(view().name("comment-edit"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Получить страницу с комментами")
+    public void shouldReturnCommentsPage() throws Exception {
+
+        mockMvc.perform(get("/book-comments/" + EXISTING_ID))
+                .andExpect(status().isOk());
     }
 
 }
