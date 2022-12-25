@@ -38,25 +38,7 @@ public class LibraryPagesController {
         return "book-edit";
     }
 
-    @GetMapping("/edit-comment/{commentId}")
-    public String editComment(@PathVariable long commentId, Model model) {
-        model.addAttribute("commentId", commentId);
-        model.addAttribute("bookId", 0);
-        return "comment-edit";
-    }
 
-    @GetMapping("/new-comment/{bookId}")
-    public String newComment(@PathVariable long bookId, Model model) {
-        model.addAttribute("commentId", -1);
-        model.addAttribute("bookId", bookId);
-        return "comment-edit";
-    }
-
-    @GetMapping("/book-comments/{bookId}")
-    public String commentsByBook(@PathVariable long bookId, Model model) {
-        model.addAttribute("bookId", bookId);
-        return "comments";
-    }
 
 
 

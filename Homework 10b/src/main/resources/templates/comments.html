@@ -95,14 +95,13 @@
 </script>
 <script>
     function deleteItem(id) {
-        fetch(`/api/comments/${id}`, {
-            method: 'DELETE'
-        })
-            .catch(error => console.error('Unable to delete comment.', error))
-            .then(() => {
+        $.ajax({
+            url: '/api/comments/' + id,
+            type: 'DELETE',
+            success: function (result) {
                 window.location.reload();
-            });
-
+            }
+        });
     }
 
 </script>
