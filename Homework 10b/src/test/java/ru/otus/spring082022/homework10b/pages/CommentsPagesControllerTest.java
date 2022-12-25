@@ -17,9 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @ContextConfiguration(classes = Homework10bApplication.class)
-@WebMvcTest(controllers = LibraryPagesController.class)
+@WebMvcTest(controllers = CommentsPagesController.class)
 
-public class LibraryPagesControllerTest {
+public class CommentsPagesControllerTest {
 
     private static final long EXISTING_ID = 1L;
     @Autowired
@@ -29,28 +29,19 @@ public class LibraryPagesControllerTest {
     private LibraryService libraryService;
 
     @Test
-    @DisplayName("Получить страницу с книгами")
-    public void shouldReturnLibraryPage() throws Exception {
-
-        mockMvc.perform(get("/"))
+    @DisplayName("Получить страницу с редактированием  коммента")
+    public void shouldReturnEditCommentPage() throws Exception {
+        mockMvc.perform(get("/edit-comment/" + EXISTING_ID))
+                .andExpect(view().name("comment-edit"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("Получить страницу с редактированием новой книги")
-    public void shouldReturnNewBookPage() throws Exception {
+    @DisplayName("Получить страницу с комментами")
+    public void shouldReturnCommentsPage() throws Exception {
 
-        mockMvc.perform(get("/new-book"))
-                .andExpect(view().name("book-edit"))
+        mockMvc.perform(get("/book-comments/" + EXISTING_ID))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("Получить страницу с редактированием  книги")
-    public void shouldReturnEditBookPage() throws Exception {
-
-        mockMvc.perform(get("/edit-book/" + EXISTING_ID))
-                .andExpect(view().name("book-edit"))
-                .andExpect(status().isOk());
-    }
 }

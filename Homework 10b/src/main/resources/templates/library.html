@@ -95,13 +95,14 @@
 
 <script>
     function deleteItem(id) {
-        fetch(`/api/books/${id}`, {
-            method: 'DELETE'
-        })
-            .catch(error => console.error('Unable to delete book.', error))
-            .then(() => {
+        $.ajax({
+            url: '/api/books/' + id,
+            type: 'DELETE',
+            success: function (result) {
                 window.location.reload();
-            });
+            }
+        });
+
     }
 </script>
 </body>

@@ -100,8 +100,9 @@
             url: '/api/comments/',
             data: data_json,
             contentType: 'application/json; charset=utf-8'
+        }).done(function (data) {
+            window.location.href = "/";
         });
-        window.location.href = "/";
     }
 </script>
 </html>
