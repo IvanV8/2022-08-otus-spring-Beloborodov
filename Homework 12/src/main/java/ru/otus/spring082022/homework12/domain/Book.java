@@ -28,14 +28,12 @@ public class Book {
     private String title;
     @Column(name = "isbn", nullable = false, unique = true)
     private String isbn;
-
     @ManyToOne(targetEntity = Author.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private Author author;
     @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id", referencedColumnName = "id")
     private Genre genre;
-
     public Book(long bookId) {
         this.id = bookId;
     }

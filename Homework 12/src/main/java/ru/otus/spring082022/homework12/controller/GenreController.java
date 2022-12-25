@@ -14,7 +14,6 @@ import java.util.List;
 public class GenreController {
     private final LibraryService libraryService;
 
-
     @GetMapping("/api/genres")
     public List<Genre> getAllGenres() {
         return libraryService.listAllGenres();
