@@ -28,20 +28,13 @@ public class UserServiceImpl implements UserDetailsService {
         return userRepository.findUserByLoginIs(login);
     }
 
-    private Collection<GrantedAuthority> getGrantedAuthorities(User user) {
-
-        Collection<GrantedAuthority> grantedAuthority = new ArrayList<>();
-        grantedAuthority.add(new SimpleGrantedAuthority("ROLE_USER"));
-        return grantedAuthority;
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByLoginIs(username);
         if (user == null) {
             throw new UsernameNotFoundException("User Name " + username + "Not Found");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
 
 
     }

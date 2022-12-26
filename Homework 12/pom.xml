@@ -11,7 +11,7 @@
     <groupId>ru.otus.spring082022</groupId>
     <artifactId>Homework12</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Homework10</name>
+    <name>Homework12</name>
     <description>Homework12</description>
     <properties>
         <java.version>11</java.version>
@@ -42,7 +42,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

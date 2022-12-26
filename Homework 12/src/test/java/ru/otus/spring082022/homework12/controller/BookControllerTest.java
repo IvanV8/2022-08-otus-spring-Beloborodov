@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.spring082022.homework12.Homework12Application;
 import ru.otus.spring082022.homework12.domain.Author;
@@ -18,6 +21,7 @@ import ru.otus.spring082022.homework12.domain.Comment;
 import ru.otus.spring082022.homework12.domain.Genre;
 import ru.otus.spring082022.homework12.dto.BookDto;
 import ru.otus.spring082022.homework12.service.LibraryService;
+import ru.otus.spring082022.homework12.service.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,8 +32,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ContextConfiguration(classes = Homework12Application.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BookController.class)
+@WithMockUser(username = "test_user")
 public class BookControllerTest {
 
     private static final long EXISTING_ID = 1L;
@@ -46,6 +51,11 @@ public class BookControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private LibraryService libraryService;
+
+    @MockBean
+    private UserServiceImpl userService;
+
+
 
     @BeforeAll
     public static void initMockData() {
