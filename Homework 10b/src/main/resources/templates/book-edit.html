@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit book in Library</title>
+
+    <style type="text/css">
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: cursive;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 5px;
+            outline: none;
+        }
+
+        label {
+            line-height: 1.9rem;
+        }
+
+        input[type="submit"] {
+            transform: translate(2.2%);
+            padding: 3px;
+            margin-top: 0.6rem;
+            font-family: cursive;
+            font-weight: bold;
+        }
+
+        fieldset {
+            padding: 20px 40px;
+        }
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container my-3">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+                <h2>Edit book</h2>
+                <div class="form-row">
+                    <div class="col-md-6 form-group">
+                        <label>Book ID</label>
+                        <input class="form-control" id="id" name="id" readonly="true" type="number">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Title</label>
+                        <input class="form-control" id="title" name="title" type="text">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>ISBN</label>
+                        <input class="form-control" id="isbn" name="isbn" type="text">
+                    </div>
+
+                    <div class="col-md-6 form-group">
+                        <label for="author">Author:</label>
+                        <select id="author">
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="genre">Genre:</label>
+                        <select id="genre">
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block mt-3" onclick="onSubmit()">Save Book</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var $select_authors = $('#author');
+        $.get('/api/authors/').done(function (authors) {
+            authors.forEach(function (author) {
+                var option = $('<option value="' + author.id + '">' + author.name + '</option>');
+                $select_authors.append(option);
+            });
+        });
+        var $select_genres = $('#genre');
+        $.get('/api/genres/').done(function (genres) {
+            genres.forEach(function (genre) {
+                var option = $('<option value="' + genre.id + '">' + genre.name + '</option>');
+                $select_genres.append(option);
+            });
+        });
+        $.get('/api/books/' + [[${bookId}]]).done(function (book) {
+                $("#id").val(book.id);
+                $("#title").val(book.title);
+                $("#isbn").val(book.isbn);
+                $('#author').val(book.author.id).change();
+                $('#genre').val(book.genre.id).change();
+            }
+        );
+
+    });
+</script>
+<script>
+    function onSubmit() {
+        var data_json = JSON.stringify({
+            "id": $("#id").val(),
+            "title": $("#title").val(),
+            "isbn": $("#isbn").val(),
+            "author": {
+                "id": $("#author").val()
+            },
+            "genre": {
+                "id": $("#genre").val()
+            }
+        });
+        $.post({
+            url: '/api/books/',
+            data: data_json,
+            contentType: 'application/json; charset=utf-8'
+        }).done(function (data) {
+            window.location.href = "/";
+        });
+    }
+</script>
+</body>
+</html>
