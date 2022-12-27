@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:bookdb
+
+
+  jpa:
+    generate-ddl: false
+  hibernate:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  shell:
+    interactive:
+      enabled: false
+
+  liquibase:
+    enabled: true
+    contexts: test
+    change-log: classpath:db.changelog/db.changelog-master-test.yaml
