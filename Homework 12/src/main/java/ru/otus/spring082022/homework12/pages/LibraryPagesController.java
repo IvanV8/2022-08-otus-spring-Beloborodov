@@ -26,6 +26,11 @@ public class LibraryPagesController {
         return "library";
     }
 
+    @GetMapping("/login")
+    public String loginPage(Model model) {
+        return "login";
+    }
+
     @GetMapping("/new-book")
     public String newBook(Model model) {
         model.addAttribute("bookId", -1);

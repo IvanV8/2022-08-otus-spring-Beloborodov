@@ -3,12 +3,10 @@ package ru.otus.spring082022.homework12.pages;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.spring082022.homework12.service.LibraryService;
 import ru.otus.spring082022.homework12.service.UserServiceImpl;
@@ -19,8 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-@ExtendWith(SpringExtension.class)
-@WithMockUser(username = "test_user")
 @WebMvcTest(controllers = CommentsPagesController.class)
 
 public class CommentsPagesControllerTest {
@@ -36,6 +32,7 @@ public class CommentsPagesControllerTest {
     private UserServiceImpl userService;
 
     @Test
+    @WithMockUser(username = "test_user")
     @DisplayName("Получить страницу с редактированием  коммента")
     public void shouldReturnEditCommentPage() throws Exception {
         mockMvc.perform(get("/edit-comment/" + EXISTING_ID))
@@ -43,12 +40,30 @@ public class CommentsPagesControllerTest {
                 .andExpect(status().isOk());
     }
 
+
     @Test
+    @DisplayName("Получить страницу с редактированием  коммента 403")
+    public void shouldReturnEditCommentPage403() throws Exception {
+        mockMvc.perform(get("/edit-comment/" + EXISTING_ID))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "test_user")
     @DisplayName("Получить страницу с комментами")
     public void shouldReturnCommentsPage() throws Exception {
 
         mockMvc.perform(get("/book-comments/" + EXISTING_ID))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("Получить страницу с комментами 403")
+    public void shouldReturnCommentsPage403() throws Exception {
+
+        mockMvc.perform(get("/book-comments/" + EXISTING_ID))
+                .andExpect(status().isForbidden());
+    }
+
 
 }

@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.spring082022.homework12.domain.Author;
 import ru.otus.spring082022.homework12.domain.Book;
@@ -30,9 +28,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
+
 @WebMvcTest(controllers = BookController.class)
-@WithMockUser(username = "test_user")
+
 public class BookControllerTest {
 
     private static final long EXISTING_ID = 1L;
@@ -65,6 +63,7 @@ public class BookControllerTest {
 
 
     @Test
+    @WithMockUser(username = "test_user")
     @DisplayName("API возвращает список книг")
     public void shouldReturnBooksJson() throws Exception {
 
@@ -84,7 +83,17 @@ public class BookControllerTest {
     }
 
     @Test
+    @DisplayName("API список книг 403")
+    public void shouldReturn401Books() throws Exception {
+
+        mockMvc.perform(get("/api/books").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
     @DisplayName("API удаляет книгу")
+    @WithMockUser(username = "test_user")
     public void shouldDeleteBook() throws Exception {
         mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(book)));
@@ -93,7 +102,15 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Сохранить книгу")
+    @DisplayName("API удаляения книг 403")
+    public void shouldDeleteBook401() throws Exception {
+        mockMvc.perform(delete("/api/books/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("API Сохранить книгу")
+    @WithMockUser(username = "test_user")
     public void shouldSaveBook() throws Exception {
         BookDto book = new BookDto(-1, "Title", "ISBN",
                 new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
@@ -104,5 +121,15 @@ public class BookControllerTest {
                 .andExpect(status().is(200));
     }
 
+    @Test
+    @DisplayName("API Сохранить книгу 403")
+    public void shouldSaveBook401() throws Exception {
+        BookDto book = new BookDto(-1, "Title", "ISBN",
+                new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
+                new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME));
 
+        mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(book)))
+                .andExpect(status().isForbidden());
+    }
 }

@@ -11,7 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.otus.spring082022.homework12.service.UserServiceImpl;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import ru.otus.spring082022.homework12.service.UserService;
 
 
 @Configuration
@@ -19,20 +20,26 @@ import ru.otus.spring082022.homework12.service.UserServiceImpl;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserServiceImpl service;
+    private UserService service;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf()
                 .disable()
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and().formLogin()
+                .formLogin()
+                .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .permitAll()
                 .and()
-                .httpBasic();
+                .authorizeRequests().antMatchers("/login").permitAll()
+                .and()
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(new Http403ForbiddenEntryPoint());
+
     }
 
     @Bean

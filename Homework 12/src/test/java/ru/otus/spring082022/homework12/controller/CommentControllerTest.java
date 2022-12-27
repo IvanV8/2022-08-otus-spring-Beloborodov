@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.spring082022.homework12.domain.Author;
 import ru.otus.spring082022.homework12.domain.Book;
@@ -29,9 +27,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
+
 @WebMvcTest(controllers = CommentsController.class)
-@WithMockUser(username = "test_user")
 public class CommentControllerTest {
 
     private static final long EXISTING_ID = 1L;
@@ -64,6 +61,7 @@ public class CommentControllerTest {
 
 
     @Test
+    @WithMockUser(username = "test_user")
     @DisplayName("API возвращает список комментов")
     public void shouldReturnCommentsJson() throws Exception {
 
@@ -81,18 +79,44 @@ public class CommentControllerTest {
     }
 
     @Test
+    @DisplayName("API возвращает список комментов 403")
+    public void shouldReturnComments403() throws Exception {
+
+        mockMvc.perform(get("/api/comments/bybook/" + EXISTING_ID))
+                .andExpect(status().isForbidden());
+        ;
+
+    }
+
+    @Test
     @DisplayName("API удаляет коммент")
+    @WithMockUser(username = "test_user")
     public void shouldDeleteComment() throws Exception {
         mockMvc.perform(delete("/api/comments/" + EXISTING_ID).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("API удаляет коммент 403")
+    public void shouldDeleteComment403() throws Exception {
+        mockMvc.perform(delete("/api/comments/" + EXISTING_ID)).andExpect(status().isForbidden());
+    }
+
+
+    @Test
     @DisplayName("API сохраняет коммент")
+    @WithMockUser(username = "test_user")
     public void shouldSaveComment() throws Exception {
         mockMvc.perform(post("/api/comments/").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(comment)))
                 .andExpect(status().is(200));
+    }
+
+    @Test
+    @DisplayName("API сохраняет коммент 403")
+    public void shouldSaveCommentreturn403() throws Exception {
+        mockMvc.perform(post("/api/comments/").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
 

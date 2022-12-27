@@ -16,7 +16,7 @@ import java.util.Collection;
 @Entity
 @Getter
 @Table(name = "users")
-public class User implements UserDetails {
+public class LibraryUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
