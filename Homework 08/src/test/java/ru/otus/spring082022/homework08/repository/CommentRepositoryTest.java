@@ -13,6 +13,7 @@ import ru.otus.spring082022.homework08.repositories.CommentRepository;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("CommentRepository  should ")
 class CommentRepositoryTest extends AbstractRepositoryTest {
@@ -28,10 +29,10 @@ class CommentRepositoryTest extends AbstractRepositoryTest {
 
     @DisplayName(" возвращать корректный список комментариев")
     @Test
-    void shouldReturnCorrectBookList() {
+    void shouldReturnCorrectCommentList() {
         val comments = commentRepository.findAll();
         assertThat(comments).isNotNull().hasSize(1);
-        assertThat(comments.stream().anyMatch(s -> s.getUserName().equals(EXISTING_AUTHOR_COMMENT)));
+        assertEquals(comments.get(0).getUserName(), EXISTING_AUTHOR_COMMENT);
 
     }
 

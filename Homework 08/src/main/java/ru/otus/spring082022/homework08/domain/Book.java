@@ -29,4 +29,7 @@ public class Book {
         this.genre = genre;
     }
 
+    public Book(String bookId) {
+        this.id = bookId;
+    }
 }

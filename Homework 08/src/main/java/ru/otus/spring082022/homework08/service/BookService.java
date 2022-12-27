@@ -1,5 +1,6 @@
 package ru.otus.spring082022.homework08.service;
 
+import ru.otus.spring082022.homework08.domain.Book;
 import ru.otus.spring082022.homework08.domain.Comment;
 
 public interface BookService {
@@ -12,19 +13,21 @@ public interface BookService {
 
     void newBook();
 
-    void updateBook(String id);
+    String updateBook(String id);
 
     void listAllGenres();
 
     void deleteBookById(String id);
 
-    void deleteBook(String id);
+    String deleteBook(String id);
 
     String reportCount();
 
     void newComment();
 
     void listCommentsByBook(String bookId);
+
+    void updateBookEverywhere(Book book);
 
 
 }

@@ -25,7 +25,7 @@ public class ApplicationShellCommandsTest {
 
     @DisplayName(" должен возвращать сообщение об удалении")
     @Test
-    void shouldReturnExpectedMessageAfterLoginCommandEvaluated() {
+    void shouldReturnExpectedMessageAfterDeleteCommandEvaluated() {
         String command = String.format(COMMAND_DELETE_PATTERN, COMMAND_DELETE_SHORT, CUSTOM_ID);
         String res = (String) shell.evaluate(() -> command);
         assertThat(res).isEqualTo(String.format(COMMAND_DELETE_MESSAGE, CUSTOM_ID));

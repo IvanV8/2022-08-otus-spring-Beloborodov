@@ -39,8 +39,8 @@ public class ApplicationShellCommands {
     }
 
     @ShellMethod(value = "Edit", key = {"e", "edit"}, group = "Books")
-    public void editBook(@ShellOption(help = "Enter id", defaultValue = "") String id) {
-        bookService.updateBook(id);
+    public String editBook(@ShellOption(help = "Enter id", defaultValue = "") String id) {
+        return bookService.updateBook(id);
     }
 
     @ShellMethod(value = "Book comments", key = {"bc", "book comments"}, group = "Books")
@@ -49,8 +49,8 @@ public class ApplicationShellCommands {
     }
 
     @ShellMethod(value = "Delete", key = {"d", "delete"}, group = "Books")
-    public void deleteBook(@ShellOption(help = "Enter id", defaultValue = "") String id) {
-        bookService.deleteBook(id);
+    public String deleteBook(@ShellOption(help = "Enter id", defaultValue = "") String id) {
+        return bookService.deleteBook(id);
     }
 
     @ShellMethod(value = "Report", key = {"r", "report"}, group = "Books")

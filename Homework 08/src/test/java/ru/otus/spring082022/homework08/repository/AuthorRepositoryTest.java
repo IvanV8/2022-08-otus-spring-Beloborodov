@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.spring082022.homework08.repositories.AuthorRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("AuthorRepository  should ")
 class AuthorRepositoryTest extends AbstractRepositoryTest {
@@ -20,7 +21,7 @@ class AuthorRepositoryTest extends AbstractRepositoryTest {
     void shouldReturnCorrectAuthorList() {
         val authors = authorRepository.findAll();
         assertThat(authors).isNotNull().hasSize(3);
-        assertThat(authors.stream().anyMatch(s -> s.getName().equals(EXISTING_BOOK_AUTHOR_NAME)));
+        assertEquals(authors.get(0).getName(), EXISTING_BOOK_AUTHOR_NAME);
 
     }
 }
