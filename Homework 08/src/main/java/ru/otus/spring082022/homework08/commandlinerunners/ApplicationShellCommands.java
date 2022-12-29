@@ -50,7 +50,7 @@ public class ApplicationShellCommands {
 
     @ShellMethod(value = "Delete", key = {"d", "delete"}, group = "Books")
     public String deleteBook(@ShellOption(help = "Enter id", defaultValue = "") String id) {
-        return bookService.deleteBook(id);
+        return bookService.deleteBookById(id);
     }
 
     @ShellMethod(value = "Report", key = {"r", "report"}, group = "Books")

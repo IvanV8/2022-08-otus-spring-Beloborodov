@@ -78,7 +78,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBookById(String id) {
+    public String deleteBookById(String id) {
         try {
             if (id.equals("")) {
                 id = ioService.inStringWithPrompt("Enter ID:");
@@ -86,22 +86,14 @@ public class BookServiceImpl implements BookService {
             if (!bookRepository.existsById(id)) {
                 throw new ObjectNotFoundException("Book hasn't found with id");
             }
-            commentRepository.deleteAllByBook(id);
             bookRepository.deleteById(id);
+            return String.format("Book deleted with id:%s", id);
+
         } catch (ObjectNotFoundException e) {
-            ioService.outStringn("Object ");
+            return "Object not found";
         }
     }
 
-    @Override
-    public String deleteBook(String id) {
-        if (id.equals("")) {
-            id = ioService.inStringWithPrompt("Enter ID:");
-        }
-        deleteBookById(id);
-        return String.format("Book deleted with id:%s", id);
-
-    }
 
 
     @Override

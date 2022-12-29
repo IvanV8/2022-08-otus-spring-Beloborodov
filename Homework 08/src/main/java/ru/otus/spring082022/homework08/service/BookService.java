@@ -16,9 +16,8 @@ public interface BookService {
 
     void listAllGenres();
 
-    void deleteBookById(String id);
 
-    String deleteBook(String id);
+    String deleteBookById(String id);
 
     String reportCount();
 

@@ -14,21 +14,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApplicationShellCommandsTest {
 
 
-    private static final String COMMAND_DELETE_MESSAGE = "Book deleted with id:%d";
+    private static final String COMMAND_REPORT_MESSAGE = "Total number of books:%d";
 
-    private static final String COMMAND_DELETE_PATTERN = "%s %d";
-    private static final long CUSTOM_ID = 1L;
-    private static final String COMMAND_DELETE_SHORT = "d";
+    private static final String COMMAND_REPORT_PATTERN = "r";
+    private static final long TOTAL_BOOKS = 3;
+
 
     @Autowired
     private Shell shell;
 
-    @DisplayName(" должен возвращать сообщение об удалении")
+    @DisplayName(" должен возвращать отчет о книгах")
     @Test
     void shouldReturnExpectedMessageAfterDeleteCommandEvaluated() {
-        String command = String.format(COMMAND_DELETE_PATTERN, COMMAND_DELETE_SHORT, CUSTOM_ID);
+        String command = COMMAND_REPORT_PATTERN;
         String res = (String) shell.evaluate(() -> command);
-        assertThat(res).isEqualTo(String.format(COMMAND_DELETE_MESSAGE, CUSTOM_ID));
+        assertThat(res).isEqualTo(String.format(COMMAND_REPORT_MESSAGE, TOTAL_BOOKS));
     }
 
 
