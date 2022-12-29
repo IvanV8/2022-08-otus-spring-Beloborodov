@@ -1,6 +1,5 @@
 package ru.otus.spring082022.homework08.service;
 
-import ru.otus.spring082022.homework08.domain.Book;
 import ru.otus.spring082022.homework08.domain.Comment;
 
 public interface BookService {
@@ -26,8 +25,6 @@ public interface BookService {
     void newComment();
 
     void listCommentsByBook(String bookId);
-
-    void updateBookEverywhere(Book book);
 
 
 }

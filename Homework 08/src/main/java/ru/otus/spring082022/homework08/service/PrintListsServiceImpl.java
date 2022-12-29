@@ -17,7 +17,7 @@ public class PrintListsServiceImpl implements PrintListsService {
     private final InOutService ioService;
 
     @Override
-    public void PrintBooks(List<Book> books) {
+    public void printBooks(List<Book> books) {
         ioService.outStringn("         ID                                    TITLE                ISBN                       AUTHOR                   GENRE");
         ioService.outStringn("-----------------------------------------------------------------------------------------------------------------------------");
 
@@ -27,7 +27,7 @@ public class PrintListsServiceImpl implements PrintListsService {
     }
 
     @Override
-    public void PrintComments(List<Comment> comments) {
+    public void printComments(List<Comment> comments) {
         if (comments == null || comments.size() == 0) {
             ioService.outStringn("No comments for book.");
         } else {
@@ -40,7 +40,7 @@ public class PrintListsServiceImpl implements PrintListsService {
     }
 
     @Override
-    public void PrintAuthors(List<Author> authors) {
+    public void printAuthors(List<Author> authors) {
         ioService.outStringn("         ID                                      NAME");
         ioService.outStringn("-----------------------------------------------------");
 
@@ -50,7 +50,7 @@ public class PrintListsServiceImpl implements PrintListsService {
     }
 
     @Override
-    public void PrintGenres(List<Genre> genres) {
+    public void printGenres(List<Genre> genres) {
         ioService.outStringn("         ID                                      NAME");
         ioService.outStringn("-----------------------------------------------------");
 

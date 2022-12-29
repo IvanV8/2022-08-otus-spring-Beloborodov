@@ -6,8 +6,8 @@ spring:
       database: books
 
 mongock:
-  runner-type: "ApplicationRunner" # default
-  #runner-type: "InitializingBean"
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
   change-logs-scan-package:
     - ru.otus.spring082022.homework08.mongock
 

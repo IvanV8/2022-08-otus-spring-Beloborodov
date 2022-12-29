@@ -14,7 +14,7 @@ import ru.otus.spring082022.homework08.repositories.GenreRepository;
 
 import java.time.LocalDateTime;
 
-@ChangeLog
+@ChangeLog(order = "001")
 public class DatabaseChangelog {
 
     private Genre poemGenre;

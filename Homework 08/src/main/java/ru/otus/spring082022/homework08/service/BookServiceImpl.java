@@ -2,7 +2,6 @@ package ru.otus.spring082022.homework08.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring082022.homework08.domain.Author;
 import ru.otus.spring082022.homework08.domain.Book;
 import ru.otus.spring082022.homework08.domain.Comment;
@@ -31,18 +30,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void listAllBooks() {
-        printService.PrintBooks(bookRepository.findAll());
+        printService.printBooks(bookRepository.findAll());
     }
 
     @Override
     public void listCommentsByBook(String bookId) {
-        if (bookId.equals(""))
+        if (bookId.equals("")) {
             bookId = ioService.inStringWithPrompt("Enter book ID:");
+        }
         List<Comment> comments = commentRepository.findAllByBookId(bookId);
-        if (comments == null || comments.size() == 0)
+        if (comments == null || comments.size() == 0) {
             ioService.outStringn(String.format("No comments for book %s", bookId));
-        else {
-            printService.PrintComments(commentRepository.findAllByBookId(bookId));
+        } else {
+            printService.printComments(commentRepository.findAllByBookId(bookId));
         }
     }
 
@@ -67,13 +67,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void listAllAuthors() {
-        printService.PrintAuthors(authorRepository.findAll());
+        printService.printAuthors(authorRepository.findAll());
 
     }
 
     @Override
     public void listAllGenres() {
-        printService.PrintGenres(genreRepository.findAll());
+        printService.printGenres(genreRepository.findAll());
 
     }
 
@@ -95,8 +95,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String deleteBook(String id) {
-        if (id.equals(""))
+        if (id.equals("")) {
             id = ioService.inStringWithPrompt("Enter ID:");
+        }
         deleteBookById(id);
         return String.format("Book deleted with id:%s", id);
 
@@ -112,8 +113,9 @@ public class BookServiceImpl implements BookService {
     public void newComment() {
         try {
             String bookId = ioService.inStringWithPrompt("Enter book ID:");
-            if (!bookRepository.existsById(bookId))
+            if (!bookRepository.existsById(bookId)) {
                 throw new ObjectNotFoundException(String.format("Book not found with id:%s", bookId));
+            }
             String userName = ioService.inStringWithPrompt("Enter your name:");
             String textComment = ioService.inStringWithPrompt("Enter your comment:");
             Comment comment = new Comment(userName, LocalDateTime.now(), textComment, new Book(bookId));
@@ -177,7 +179,7 @@ public class BookServiceImpl implements BookService {
             book.setAuthor(author);
             book.setGenre(genre);
 
-            updateBookEverywhere(book);
+            bookRepository.saveBookEverywhere(book);
             return String.format("Book updated with id:%s", id);
 
         } catch (ObjectNotFoundException e) {
@@ -186,17 +188,6 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    @Transactional
-    @Override
-    public void updateBookEverywhere(Book book) {
-        bookRepository.save(book);
-        List<Comment> comments = commentRepository.findAllByBookId(book.getId());
-        for (Comment c : comments) {
-            c.setBook(book);
-            commentRepository.save(c);
-
-        }
-    }
 }
 
 

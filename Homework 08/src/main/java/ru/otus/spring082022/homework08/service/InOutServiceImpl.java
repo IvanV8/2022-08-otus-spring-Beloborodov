@@ -19,7 +19,6 @@ public class InOutServiceImpl implements InOutService {
         this.inStream = ioProvider.getInStream();
     }
 
-
     @Override
     public void outStringn(String textMessage) {
         printStream.println(textMessage);

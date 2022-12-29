@@ -1,8 +1,7 @@
 package ru.otus.spring082022.homework08.repository;
 
 import lombok.val;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.spring082022.homework08.domain.Author;
 import ru.otus.spring082022.homework08.domain.Book;
@@ -15,6 +14,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("CommentRepository  should ")
 class CommentRepositoryTest extends AbstractRepositoryTest {
 
@@ -29,6 +29,7 @@ class CommentRepositoryTest extends AbstractRepositoryTest {
 
     @DisplayName(" возвращать корректный список комментариев")
     @Test
+    @Order(1)
     void shouldReturnCorrectCommentList() {
         val comments = commentRepository.findAll();
         assertThat(comments).isNotNull().hasSize(1);
@@ -38,6 +39,7 @@ class CommentRepositoryTest extends AbstractRepositoryTest {
 
     @DisplayName("должен корректно сохранять комментарий ")
     @Test
+    @Order(2)
     void shouldCorrectSaveComment() {
         val comment = new Comment(EXISTING_AUTHOR_COMMENT, LocalDateTime.now(), "Great",
                 new Book(NEW_BOOK_TITLE, NEW_BOOK_ISBN, new Author(EXISTING_BOOK_AUTHOR_NAME), new Genre(EXISTING_BOOK_GENRE_NAME)));
@@ -46,7 +48,8 @@ class CommentRepositoryTest extends AbstractRepositoryTest {
         assertThat(actual.getUserName()).isEqualTo(comment.getUserName());
     }
 
-    @DisplayName("должен  удалять книгу")
+    @Order(3)
+    @DisplayName("должен  удалять комментарий")
     @Test
     void shouldReturnCorrectDeleteComment() {
         val comment = commentRepository.findAll().get(0);

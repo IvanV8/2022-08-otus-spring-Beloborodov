@@ -9,12 +9,12 @@ import java.util.List;
 
 public interface PrintListsService {
 
-    void PrintBooks(List<Book> books);
+    void printBooks(List<Book> books);
 
-    void PrintComments(List<Comment> comments);
+    void printComments(List<Comment> comments);
 
-    void PrintAuthors(List<Author> authors);
+    void printAuthors(List<Author> authors);
 
-    void PrintGenres(List<Genre> genre);
+    void printGenres(List<Genre> genre);
 
 }
