@@ -1,6 +1,7 @@
 package ru.otus.spring082022.homework13.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UsernameNotFoundException("User Name " + username + "Not Found");
         }
-        return user;
+        return new User(user.getUsername(), user.getPassword(), user.getRoles());
+
     }
 }
