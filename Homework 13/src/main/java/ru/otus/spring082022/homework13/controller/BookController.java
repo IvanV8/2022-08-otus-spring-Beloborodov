@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class BookController {
     private final LibraryService libraryService;
 
+
     @GetMapping("/api/books")
     public List<BookDto> getAllBooks() {
         return libraryService.listAllBooks().stream().map(BookDto::toDto)
