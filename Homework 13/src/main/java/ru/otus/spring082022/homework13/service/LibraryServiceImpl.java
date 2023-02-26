@@ -3,10 +3,7 @@ package ru.otus.spring082022.homework13.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.spring082022.homework13.domain.*;
-import ru.otus.spring082022.homework13.repositories.AuthorRepository;
-import ru.otus.spring082022.homework13.repositories.BookRepository;
-import ru.otus.spring082022.homework13.repositories.CommentRepository;
-import ru.otus.spring082022.homework13.repositories.GenreRepository;
+import ru.otus.spring082022.homework13.repositories.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -21,6 +18,7 @@ public class LibraryServiceImpl implements LibraryService {
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<Book> listAllBooks() {
@@ -90,23 +88,24 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
     @Override
-    public void saveBook(Book book) {
-        bookRepository.save(book);
+    public Long saveBook(Book book) {
+        return bookRepository.save(book).getId();
     }
 
 
     @Override
     @Transactional
-    public void saveComment(Comment comment, LibraryUser userDetails) {
+    public Long saveComment(Comment comment, LibraryUser userDetails) {
         try {
             Book book = bookRepository.findById(comment.getBook().getId())
                     .orElseThrow(() -> new ObjectNotFoundException(String.format("No book with id")));
+            LibraryUser libraryUser = userRepository.findUserByLoginIs(userDetails.getLogin());
             comment.setCommentDateTime(LocalDateTime.now());
-            comment.setUserName(userDetails);
+            comment.setUserName(libraryUser);
             comment.setBook(book);
-            commentRepository.save(comment);
+            return commentRepository.save(comment).getId();
         } catch (ObjectNotFoundException e) {
-            return;
+            return 0L;
         }
 
     }

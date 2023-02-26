@@ -75,6 +75,7 @@
 </div>
 
 <script>
+    var book_id = [[${bookId}]];
     $(function () {
         var $select_authors = $('#author');
         $.get('/api/authors/').done(function (authors) {
@@ -90,15 +91,19 @@
                 $select_genres.append(option);
             });
         });
-        $.get('/api/books/' + [[${bookId}]]).done(function (book) {
-                $("#id").val(book.id);
-                $("#title").val(book.title);
-                $("#isbn").val(book.isbn);
-                $('#author').val(book.author.id).change();
-                $('#genre').val(book.genre.id).change();
-            }
-        );
-
+        if (book_id != -1) {
+            $(function () {
+                $.get('/api/books/' + book_id).done(function (book) {
+                    $("#id").val(book.id);
+                    $("#title").val(book.title);
+                    $("#isbn").val(book.isbn);
+                    $('#author').val(book.author.id).change();
+                    $('#genre').val(book.genre.id).change();
+                });
+            })
+        } else {
+            $("#id").val(book_id);
+        }
     });
 </script>
 <script>

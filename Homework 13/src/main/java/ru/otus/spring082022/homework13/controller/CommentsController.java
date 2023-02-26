@@ -4,8 +4,10 @@ package ru.otus.spring082022.homework13.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring082022.homework13.domain.Comment;
 import ru.otus.spring082022.homework13.domain.LibraryUser;
@@ -49,18 +51,20 @@ public class CommentsController {
     }
 
     @PostMapping("/api/comments/")
-    public ResponseEntity<CommentDto> saveComment(@RequestBody CommentDto comment) throws ServiceException {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ResponseEntity<?> saveComment(@RequestBody CommentDto comment) throws ServiceException {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            LibraryUser userDetails = (LibraryUser) authentication.getPrincipal();
-            libraryService.saveComment(CommentDto.toDomain(comment), userDetails);
-            return new ResponseEntity<>(comment, HttpStatus.OK);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Long commentId = libraryService.saveComment(CommentDto.toDomain(comment), new LibraryUser(userDetails));
+            return new ResponseEntity<>(commentId, HttpStatus.OK);
         } catch (Exception e) {
             throw new ServiceException(e.getMessage());
         }
     }
 
     @DeleteMapping("/api/comments/{commentId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> deleteComment(@PathVariable long commentId) throws ServiceException {
         try {
             libraryService.deleteCommentById(commentId);

@@ -19,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommentsRepositoryTest {
 
 
-    private static final long EXISTING_BOOK_COMMENT_ID = 1;
+
     private static final long EXISTING_BOOK_ID = 1;
-    private static final String EXISTING_BOOK_COMMENT_AUTHOR = "Alexey Yablokov";
+    private static final String EXISTING_BOOK_COMMENT_TEXT = "Great book!";
 
 
     @Autowired
@@ -37,9 +37,9 @@ public class CommentsRepositoryTest {
 
         List<Comment> actualCommentList = repositoryJpa.findAllByBookId(EXISTING_BOOK_ID);
         assertThat(actualCommentList)
-                .extracting(Comment::getUserName)
-                .anyMatch(value -> value.matches(EXISTING_BOOK_COMMENT_AUTHOR))
-                .anySatisfy(value -> assertThat(value).matches(EXISTING_BOOK_COMMENT_AUTHOR));
+                .extracting(Comment::getText)
+                .anyMatch(value -> value.matches(EXISTING_BOOK_COMMENT_TEXT))
+                .anySatisfy(value -> assertThat(value).matches(EXISTING_BOOK_COMMENT_TEXT));
 
     }
 

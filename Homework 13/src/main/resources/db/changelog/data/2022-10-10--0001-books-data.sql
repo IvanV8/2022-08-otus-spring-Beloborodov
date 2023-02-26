@@ -1,7 +1,7 @@
 insert into roles (name)
-values ('ADMIN'),
-       ('USER'),
-       ('CHILD');
+values ('ROLE_ADMIN'),
+       ('ROLE_USER'),
+       ('ROLE_CHILD');
 commit;
 
 insert into users (login, password, firstname, lastname, role_id)

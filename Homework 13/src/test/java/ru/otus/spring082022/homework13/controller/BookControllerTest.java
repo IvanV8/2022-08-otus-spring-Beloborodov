@@ -11,10 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.spring082022.homework13.domain.Author;
-import ru.otus.spring082022.homework13.domain.Book;
-import ru.otus.spring082022.homework13.domain.Comment;
-import ru.otus.spring082022.homework13.domain.Genre;
+import ru.otus.spring082022.homework13.domain.*;
 import ru.otus.spring082022.homework13.dto.BookDto;
 import ru.otus.spring082022.homework13.service.LibraryService;
 import ru.otus.spring082022.homework13.service.UserServiceImpl;
@@ -25,6 +22,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,6 +41,8 @@ public class BookControllerTest {
     private static Comment comment;
     @Autowired
     private MockMvc mockMvc;
+
+
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
@@ -54,15 +54,21 @@ public class BookControllerTest {
 
     @BeforeAll
     public static void initMockData() {
+        LibraryUser user = new LibraryUser(1, "testuser", "password", "test", "test",
+                new UserRole(1L, "ADMIN"));
+
+
         book = new Book(-1, EXISTING_BOOK_TITLE, "ISBN",
                 new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
                 new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME));
-        comment = new Comment(-1, "user", LocalDateTime.now(), "comment", book);
+        comment = new Comment(-1, user, LocalDateTime.now(), "comment", book);
+
+
     }
 
 
     @Test
-    @WithMockUser(username = "test_user")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @DisplayName("API возвращает список книг")
     public void shouldReturnBooksJson() throws Exception {
 
@@ -92,7 +98,7 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("API удаляет книгу")
-    @WithMockUser(username = "test_user")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void shouldDeleteBook() throws Exception {
         mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(book)));
@@ -109,7 +115,7 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("API Сохранить книгу")
-    @WithMockUser(username = "test_user")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void shouldSaveBook() throws Exception {
         BookDto book = new BookDto(-1, "Title", "ISBN",
                 new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
@@ -128,6 +134,19 @@ public class BookControllerTest {
                 new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME));
 
         mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(book)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("API Сохранить книгу нет доступа")
+    public void shouldSaveBookNoAuthorities() throws Exception {
+        BookDto book = new BookDto(-1, "Test", "ISBN",
+                new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME),
+                new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME));
+
+        mockMvc.perform(post("/api/books").contentType(MediaType.APPLICATION_JSON)
+                        .with(user("child").roles("CHILD"))
                         .content(objectMapper.writeValueAsString(book)))
                 .andExpect(status().isForbidden());
     }

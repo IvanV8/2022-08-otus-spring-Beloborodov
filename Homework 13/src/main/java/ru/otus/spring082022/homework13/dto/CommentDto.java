@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CommentDto {
     private long id = -1;
-    private LibraryUser userName;
+    private UserDto userName;
     private LocalDateTime commentDateTime;
     private String text;
     private long bookId;
 
     public static CommentDto toDto(Comment comment) {
         return new CommentDto(comment.getId(),
-                comment.getUserName(),
+                UserDto.toDto(comment.getUserName()),
                 comment.getCommentDateTime(),
                 comment.getText(),
                 comment.getBook().getId());
@@ -29,7 +29,7 @@ public class CommentDto {
 
     public static Comment toDomain(CommentDto commentDto) {
         return new Comment(commentDto.getId(),
-                commentDto.getUserName(),
+                (commentDto.getUserName() == null) ? new LibraryUser() : UserDto.toDomain(commentDto.getUserName()),
                 commentDto.getCommentDateTime(),
                 commentDto.getText(), new Book(commentDto.bookId));
     }

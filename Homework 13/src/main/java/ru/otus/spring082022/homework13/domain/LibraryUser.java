@@ -69,4 +69,10 @@ public class LibraryUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public LibraryUser(UserDetails userDetails) {
+        this.id = -1;
+        this.login = userDetails.getUsername();
+
+    }
 }

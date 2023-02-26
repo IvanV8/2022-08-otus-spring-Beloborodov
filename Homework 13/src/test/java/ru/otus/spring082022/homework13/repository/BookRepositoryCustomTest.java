@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import ru.otus.spring082022.homework13.domain.Author;
 import ru.otus.spring082022.homework13.domain.Book;
 import ru.otus.spring082022.homework13.domain.Genre;
@@ -37,6 +38,7 @@ public class BookRepositoryCustomTest {
 
     @DisplayName("возвращать ожидаемое количество книг в БД")
     @Test
+    @WithMockUser(username = "ram", roles = {"ADMIN"})
     void shouldReturnExpectedBookCount() {
         Long actualPersonsCount = bookRepository.count();
         assertThat(actualPersonsCount).isEqualTo(EXPECTED_BOOKS_COUNT);
@@ -44,6 +46,7 @@ public class BookRepositoryCustomTest {
 
     @DisplayName("добавлять книгу в БД")
     @Test
+    @WithMockUser(username = "ram", roles = {"ADMIN"})
     void shouldInsertBook() {
         Genre genre = new Genre(EXISTING_BOOK_GENRE_ID, EXISTING_BOOK_GENRE_NAME);
         Author author = new Author(EXISTING_BOOK_AUTHOR_ID, EXISTING_BOOK_AUTHOR_NAME);

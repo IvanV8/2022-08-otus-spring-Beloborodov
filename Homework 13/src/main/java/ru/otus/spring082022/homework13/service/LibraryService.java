@@ -8,7 +8,7 @@ public interface LibraryService {
 
     List<Book> listAllBooks();
 
-    void saveComment(Comment comment, LibraryUser userDetails);
+    Long saveComment(Comment comment, LibraryUser userDetails);
 
     Book getBookById(long id);
 
@@ -20,7 +20,7 @@ public interface LibraryService {
 
     List<Comment> listCommentsByBook(long bookId);
 
-    void saveBook(Book book);
+    Long saveBook(Book book);
 
     Comment getCommentById(long commentId);
 
