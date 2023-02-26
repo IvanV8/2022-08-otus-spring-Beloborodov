@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit comment</title>
+
+    <style type="text/css">
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: cursive;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 5px;
+            outline: none;
+        }
+
+        label {
+            line-height: 1.9rem;
+        }
+
+        input[type="submit"] {
+            transform: translate(2.2%);
+            padding: 3px;
+            margin-top: 0.6rem;
+            font-family: cursive;
+            font-weight: bold;
+        }
+
+        fieldset {
+            padding: 20px 40px;
+        }
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container my-3">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h2>Edit comment:</h2>
+            <div class="form-row">
+                <div class="col-md-6 form-group">
+                    <label>Comment ID</label>
+                    <input class="form-control" id="id" readonly="true" type="number">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Text</label>
+                    <input class="form-control" id="text" type="text">
+                </div>
+                <div class="col-md-6 form-group">
+                    <input id="bookId" type="hidden">
+                </div>
+            </div>
+            <button class="btn-primary" onclick="onSubmit()">Save Comment</button>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var comment_id = [[${commentId}]];
+    var book_id = [[${bookId}]]
+    if (comment_id != -1) {
+        $(function () {
+            $.get('/api/comments/' + comment_id).done(function (comment) {
+                    $("#id").val(comment_id);
+                    $("#text").val(comment.text);
+                    $("#bookId").val(comment.bookId);
+                }
+            );
+
+        });
+    } else {
+        $("#id").val(comment_id);
+        $("#bookId").val(book_id);
+    }
+
+</script>
+<script>
+    function onSubmit() {
+        var data_json = JSON.stringify({
+            "id": $("#comment_id").val(),
+            "text": $("#text").val(),
+            "bookId": $("#bookId").val()
+
+        });
+
+        $.post({
+            url: '/api/comments/',
+            data: data_json,
+            contentType: 'application/json; charset=utf-8'
+        }).done(function (data) {
+            window.location.href = "/";
+        });
+    }
+</script>
+</html>
